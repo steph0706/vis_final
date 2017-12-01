@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries} from 'react-vis';
 import logo from './logo.svg';
 import './App.css';
-import InteractiveMap from 'react-map-gl';
+import ReactMapGL, {Popup} from 'react-map-gl';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg';
 
@@ -16,9 +16,8 @@ class App extends Component {
 The scientific study of language is called linguistics. Questions concerning the philosophy of language, such as whether words can represent experience, have been debated since Gorgias and Plato in ancient Greece. Thinkers such as Rousseau have argued that language originated from emotions while others like Kant have held that it originated from rational and logical thought. 20th-century philosophers such as Wittgenstein argued that philosophy is really the study of language. Major figures in linguistics include Ferdinand de Saussure and Noam Chomsky.
         </p>
 
-        <InteractiveMap
+        <ReactMapGL
 	        className="center"
-	        // width={1600}
 	        flex={1}
 	        height={600}
 	        latitude={0}
@@ -29,24 +28,27 @@ The scientific study of language is called linguistics. Questions concerning the
 	        onViewportChange={(viewport) => {
 	          const {width, height, latitude, longitude, zoom} = viewport;
 	          // Optionally call `setState` and use the state to update the map.
-	        }}
-	      />
+	        }}>
 
-        <p></p>
-        <XYPlot
-            width={300}
-            height={300}>
-            <HorizontalGridLines />
-            <LineSeries
-              color="red"
-              data={[
-                {x: 1, y: 10},
-                {x: 2, y: 5},
-                {x: 3, y: 15}
-              ]}/>
-            <XAxis title="X" />
-            <YAxis />
-        </XYPlot>
+	        <Popup latitude={-122.41} longitude={37.78} closeButton={true} closeOnClick={false} anchor="top">
+	        	<div>You are here</div>
+	        </Popup>
+	      </ReactMapGL>
+          <p></p>
+          <XYPlot
+              width={300}
+              height={300}>
+              <HorizontalGridLines />
+              <LineSeries
+                color="red"
+                data={[
+                  {x: 1, y: 10},
+                  {x: 2, y: 5},
+                  {x: 3, y: 15}
+                ]}/>
+              <XAxis title="X" />
+              <YAxis />
+          </XYPlot>
       </div>
     );
   }
