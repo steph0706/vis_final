@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries} from 'react-vis';
-import logo from './logo.svg';
 import './App.css';
 import ReactMapGL, {Popup} from 'react-map-gl';
+import Timeline from './Timeline.js';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg';
 
@@ -65,6 +65,13 @@ class App extends Component {
               <XAxis title="X" />
               <YAxis />
           </XYPlot>
+
+          
+          <Timeline 
+          	language="Chinese"
+          	description="The Chinese language is cool. There are many variants."
+          	events={[{"-800": "Chinese was born"}, {"0": "Jesus was born"}]}
+          	/>
       </div>
     );
   }
