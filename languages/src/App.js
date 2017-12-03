@@ -61,7 +61,8 @@ class App extends Component {
             for (var j = 0; j < vals.length; j++) {
               temp[j] = {
                 x: j,
-                y: vals[j]
+                y: vals[j],
+                name: series[i]
               };
             }
             data[i] = temp;
@@ -82,7 +83,7 @@ class App extends Component {
         lines.push(<LineMarkSeries
                     data={d}
                     className={lang}
-                    onValueMouseOver= {(datapoint, event) => this.setState({lineVal:datapoint, currSer:lang})}
+                    onValueMouseOver= {(datapoint, event) => this.setState({lineVal:datapoint, currSer:datapoint.name})}
                     
                     onValueMouseOut= {(datapoint, event) => this.setState({lineVal:null, currSer:null})}
                     size={3}
@@ -123,9 +124,10 @@ class App extends Component {
 
               <HorizontalGridLines />
               <VerticalGridLines />
-              {lines}
-                            <YAxis />
+              <YAxis />
               <XAxis />
+              {lines}
+              
               {
                 lineVal ? 
                 <Hint value={lineVal}>
