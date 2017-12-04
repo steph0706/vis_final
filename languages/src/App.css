@@ -38,6 +38,11 @@
 
 .lineChart {
   margin: auto;
+  flex-direction: horizontal;
+}
+
+.legend {
+  margin: auto;
 }
 .Map {
   text-align: left;
