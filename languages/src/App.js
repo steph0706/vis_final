@@ -3,7 +3,6 @@ import {
   XYPlot, 
   XAxis, YAxis, 
   HorizontalGridLines, VerticalGridLines, 
-
   VerticalBarSeries,
   Hint,
   DiscreteColorLegend,
@@ -19,7 +18,6 @@ import Data from './speakers.json';
 import LesMisData from './les-mis-data.json';
 
 import TimelineComponent from './Timeline.js';
-import ForceDirectedGraph from './force-directed-graph';
 
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg';
@@ -201,8 +199,6 @@ class App extends Component {
             </Hint> : null
           }                 
         </XYPlot>
-        <ForceDirectedGraph data={LesMisData} height={500} width={500} animation strength={50}/>
-
 
 
         <TimelineComponent
