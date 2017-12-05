@@ -15,7 +15,7 @@ import styles from './App.css';
 import {csv} from 'd3-request';
 
 import Data from './speakers.json';
-import LanguageFamilyData from './data/languageFamilyTree.json'
+import LanguageFamilyData from './data/languageHierarchy.json'
 
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg';
