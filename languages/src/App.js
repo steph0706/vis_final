@@ -15,9 +15,7 @@ import styles from './App.css';
 import {csv} from 'd3-request';
 
 import Data from './speakers.json';
-import LesMisData from './les-mis-data.json';
-
-import TimelineComponent from './Timeline.js';
+import LanguageFamilyData from './data/languageFamilyTree.json'
 
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg';
@@ -94,13 +92,16 @@ class App extends Component {
 		)
 	}
 
+
 	_renderTreeMap() {
 		return (
 			<Treemap
-				title={'My New Treemap'}
+				title={'Language Family Treemap'}
 				width={1000}
 				height={600}
-				
+        mode="squarify"
+        padding={5}
+				data={LanguageFamilyData}
 			/>
 		)
 	}
@@ -129,31 +130,31 @@ class App extends Component {
 
     const myData = {
        "title": "analytics",
-       "color": "#12939A",
+       
        "children": [
         {
          "title": "cluster",
          "children": [
-          {"title": "AgglomerativeCluster", "color": "#12939A", "size": 3938},
-          {"title": "CommunityStructure", "color": "#12939A", "size": 3812},
-          {"title": "HierarchicalCluster", "color": "#12939A", "size": 6714},
-          {"title": "MergeEdge", "color": "#12939A", "size": 743}
+          {"title": "AgglomerativeCluster",  "size": 3938},
+          {"title": "CommunityStructure",  "size": 3812},
+          {"title": "HierarchicalCluster",  "size": 6714},
+          {"title": "MergeEdge",  "size": 743}
          ]
         },
         {
          "title": "graph",
          "children": [
-          {"title": "BetweennessCentrality", "color": "#12939A", "size": 3534},
-          {"title": "LinkDistance", "color": "#12939A", "size": 5731},
-          {"title": "MaxFlowMinCut", "color": "#12939A", "size": 7840},
-          {"title": "ShortestPaths", "color": "#12939A", "size": 5914},
-          {"title": "SpanningTree", "color": "#12939A", "size": 3416}
+          {"title": "BetweennessCentrality",  "size": 3534},
+          {"title": "LinkDistance",  "size": 5731},
+          {"title": "MaxFlowMinCut",  "size": 7840},
+          {"title": "ShortestPaths",  "size": 5914},
+          {"title": "SpanningTree",  "size": 3416}
          ]
         },
         {
          "title": "optimization",
          "children": [
-          {"title": "AspectRatioBanker", "color": "#12939A", "size": 7074}
+          {"title": "AspectRatioBanker",  "size": 7074}
          ]
         }
        ]
