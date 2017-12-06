@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component} from 'react';
 import {
   XYPlot, 
   XAxis, YAxis, 
@@ -13,11 +13,10 @@ import ReactMapGL, {Popup} from 'react-map-gl';
 import '../node_modules/react-vis/dist/style.css';
 import styles from './App.css';
 import {csv} from 'd3-request';
-
-import Data from './speakers.json';
-import LesMisData from './les-mis-data.json';
-
 import TimelineComponent from './Timeline.js';
+import Barchart from './Barchart';
+import Bubblechart from './Bubblechart';
+import Button from './Button';
 
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg';
@@ -26,12 +25,14 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state= {
+      toggled:false,
       l1: null,
       l2: null,
       loadError:false,
       data:null,
-      currSer:null,
+      bubble:null,
     };
+    this._toggle = this._toggle.bind(this);
   }
 
   state = {
@@ -53,7 +54,9 @@ class App extends Component {
   _onViewportChange = viewport => this.setState({viewport});
 
   componentWillMount() {
-      csv('test1.csv', (error, d) => {
+      var file = "l1l2.csv";
+      if (this.state.toggled) file = "l2l1.csv";
+      csv(file, (error, d) => {
         if (error) this.setState({loadError: true});
         else {
           var l1 = [];
@@ -72,9 +75,12 @@ class App extends Component {
             });
           }
           this.setState({l1:l1, l2:l2});
+          console.log(this.state.l1);
         }
 
       });
+
+      this.setState({bubble:<Bubblechart/>});
   }
 
   _renderMap() {
@@ -105,60 +111,42 @@ class App extends Component {
 		)
 	}
 
-  render() {
-    var barchart = [];
-    if (this.state.l1 && this.state.l2) {
-      console.log(this.state.data);
-      barchart.push(
-        <VerticalBarSeries
-          data={this.state.l1}
-          stroke="white"
-          onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
-          onValueMouseOut={() => this.setState({lineVal:null})}
-        />);
-      barchart.push(
-        <VerticalBarSeries
-          data={this.state.l2}
-          stroke="white"
-          style={{float: "left"}}
-          onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
-          onValueMouseOut={() => this.setState({lineVal:null})}
-        />
-      )
-    }
-
-    const myData = {
-       "title": "analytics",
-       "color": "#12939A",
-       "children": [
-        {
-         "title": "cluster",
-         "children": [
-          {"title": "AgglomerativeCluster", "color": "#12939A", "size": 3938},
-          {"title": "CommunityStructure", "color": "#12939A", "size": 3812},
-          {"title": "HierarchicalCluster", "color": "#12939A", "size": 6714},
-          {"title": "MergeEdge", "color": "#12939A", "size": 743}
-         ]
-        },
-        {
-         "title": "graph",
-         "children": [
-          {"title": "BetweennessCentrality", "color": "#12939A", "size": 3534},
-          {"title": "LinkDistance", "color": "#12939A", "size": 5731},
-          {"title": "MaxFlowMinCut", "color": "#12939A", "size": 7840},
-          {"title": "ShortestPaths", "color": "#12939A", "size": 5914},
-          {"title": "SpanningTree", "color": "#12939A", "size": 3416}
-         ]
-        },
-        {
-         "title": "optimization",
-         "children": [
-          {"title": "AspectRatioBanker", "color": "#12939A", "size": 7074}
-         ]
+  _toggle() {
+    var toggle = this.state.toggled;
+    this.setState({toggled: !toggle});
+    
+    var file = "l1l2.csv";
+    if (this.state.toggled) {
+      var file = "l2l1.csv";
+      console.log("toggg");
+    } 
+    csv(file, (error, d) => {
+      if (error) this.setState({loadError: true});
+      else {
+        var l1 = [];
+        var l2 = [];
+        for (var i = 1; i < d.length; i++){
+          var vals = Object.values(d[i]);
+          l1.push( {
+            x: String(vals[1]),
+            y: Number(vals[3]),
+            name: vals[2]
+          });
+          l2.push({
+            x: String(vals[1]),
+            y: Number(vals[4]),
+            name: vals[2]
+          });
         }
-       ]
-    }
+        this.setState({l1:l1, l2:l2});
+        console.log(this.state.l1);
+      }
 
+    });
+
+  }
+
+  render() {
     const lineVal = this.state.lineVal;
 		return (
 		  <div className="App">
@@ -175,49 +163,15 @@ class App extends Component {
 		    </div>
 
         <p></p>
-            
-        <XYPlot className="lineChart"
-          width={1000}
-          height={600}
-          xType="ordinal"
-          yType="linear"
-          style={{display:"inline-block"}}
-          >
-          <DiscreteColorLegend 
-            items = {[
-              "L1 speakers",
-              "L2, speakers"
-            ]}
-            width = {100}
-            className="legend"
-            />
-          <HorizontalGridLines />
-          <VerticalGridLines />
-          <YAxis />
-          <XAxis />
-          
-          {barchart}
-          
-          {
-            lineVal ? 
-            <Hint value={lineVal}>
-              <div className="hint" style={{
-                background:"white",
-                borderStyle:"solid",
-                borderColor:"grey",
-                borderWidth:"1px",
-                marginBottom:"0px",
-                fontSize:"7",
-                padding:"10px",
-                paddingBottom:"0px",
-                lineHeight:"2px",
-              }}>
-                <h4>{lineVal.name}</h4>
-                <h5>Number of Speakers = {lineVal.y}</h5>
-              </div>
-            </Hint> : null
-          }                 
-        </XYPlot>
+        {
+          (this.state.l1 && this.state.l2) ? 
+          <Barchart l1={this.state.l1} l2={this.state.l2}/> : null
+
+        }
+
+
+        {this.state.bubble}
+        <Button label1="Top 15 L1" label2="Top 15 L2" handler={this._toggle}/>
       </div>
     );
   }
