@@ -28,6 +28,9 @@ class App extends Component {
       toggled:false,
       l1: null,
       l2: null,
+      l12: null,
+      l22: null,
+      ymax: 0,
       loadError:false,
       data:null,
       bubble:null,
@@ -54,15 +57,17 @@ class App extends Component {
   _onViewportChange = viewport => this.setState({viewport});
 
   componentWillMount() {
-      var file = "l1l2.csv";
-      if (this.state.toggled) file = "l2l1.csv";
-      csv(file, (error, d) => {
+      var file1 = "l1l2.csv";
+      var max = 0;
+      csv(file1, (error, d) => {
         if (error) this.setState({loadError: true});
         else {
-          var l1 = [];
-          var l2 = [];
-          for (var i = 1; i < d.length; i++){
-            var vals = Object.values(d[i]);
+          console.log(d);
+          let l1 = [];
+          let l2 = [];
+          for (var i = 0; i < d.length; i++){
+            let vals = Object.values(d[i]);
+            max = Math.max(vals[3], Math.max(max, vals[4]));
             l1.push( {
               x: String(vals[1]),
               y: Number(vals[3]),
@@ -75,12 +80,39 @@ class App extends Component {
             });
           }
           this.setState({l1:l1, l2:l2});
-          console.log(this.state.l1);
         }
 
       });
 
-      this.setState({bubble:<Bubblechart/>});
+
+
+      let file2 = "l2l1.csv";
+      csv(file2, (error, d) => {
+      if (error) this.setState({loadError: true});
+      else {
+        let l12 = [];
+        let l22 = [];
+        for (let i = 0; i < d.length; i++){
+          var vals = Object.values(d[i]);
+          max = Math.max(vals[3], Math.max(max, vals[4]));
+          l12.push( {
+            x: String(vals[1]),
+            y: Number(vals[3]),
+            name: vals[2]
+          });
+          l22.push({
+            x: String(vals[1]),
+            y: Number(vals[4]),
+            name: vals[2]
+          });
+        }
+        this.setState({l12: l12, l22: l22, ymax:max});
+      }
+
+    });
+
+    this.setState({bubble:<Bubblechart/>});
+    console.log(this.state.l1);
   }
 
   _renderMap() {
@@ -112,38 +144,11 @@ class App extends Component {
 	}
 
   _toggle() {
-    var toggle = this.state.toggled;
-    this.setState({toggled: !toggle});
-    
-    var file = "l1l2.csv";
-    if (this.state.toggled) {
-      var file = "l2l1.csv";
-      console.log("toggg");
-    } 
-    csv(file, (error, d) => {
-      if (error) this.setState({loadError: true});
-      else {
-        var l1 = [];
-        var l2 = [];
-        for (var i = 1; i < d.length; i++){
-          var vals = Object.values(d[i]);
-          l1.push( {
-            x: String(vals[1]),
-            y: Number(vals[3]),
-            name: vals[2]
-          });
-          l2.push({
-            x: String(vals[1]),
-            y: Number(vals[4]),
-            name: vals[2]
-          });
-        }
-        this.setState({l1:l1, l2:l2});
-        console.log(this.state.l1);
-      }
-
-    });
-
+    if (this.state.l1 != null && this.state.l12 != null) {
+      let temp1 = this.state.l1;
+      let temp2 = this.state.l2;
+      this.setState({l1: this.state.l12, l2: this.state.l22, l12:temp1, l22: temp2});
+    }
   }
 
   render() {
@@ -165,7 +170,7 @@ class App extends Component {
         <p></p>
         {
           (this.state.l1 && this.state.l2) ? 
-          <Barchart l1={this.state.l1} l2={this.state.l2}/> : null
+          <Barchart l1={this.state.l1} l2={this.state.l2} ymax={this.state.ymax}/> : null
 
         }
 

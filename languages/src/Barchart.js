@@ -17,34 +17,54 @@ export default class Barchart extends Component {
         super(props);
         this.state= {
           lineVal:null,
-          barchart: []
+          barchart: [],
+          ymax: 1300,
+          l1:null,
+          l2:null,
+
         };
+
+        this._drawChart = this._drawChart.bind(this);
     }
 
+
     componentWillMount() {
-        var barchart=[];
-        console.log(this.props.l1);
-            barchart.push(
-                <VerticalBarSeries
-                  data={this.props.l1}
-                  stroke="white"
-                  animation={true}
-                  onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
-                  onValueMouseOut={() => this.setState({lineVal:null})}
-                />
-            );
-            barchart.push(
-                <VerticalBarSeries
-                  data={this.props.l2}
-                  stroke="white"
-                  animation={true}
-                  style={{float: "left"}}
-                  onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
-                  onValueMouseOut={() => this.setState({lineVal:null})}
-                />
-            );
-            this.setState({barchart:barchart});
+        this.setState({l1: this.props.l1, l2: this.props.l2});
+        this._drawChart(this.props.l1, this.props.l2);
+        
     }
+
+    _drawChart(data1, data2) {
+        var barchart=[];
+        barchart.push(
+            <VerticalBarSeries
+              data={data1}
+              stroke="white"
+              animation={true}
+              onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
+              onValueMouseOut={() => this.setState({lineVal:null})}
+            />
+        );
+        barchart.push(
+            <VerticalBarSeries
+              data={data2}
+              stroke="white"
+              animation={true}
+              style={{float: "left"}}
+              onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
+              onValueMouseOut={() => this.setState({lineVal:null})}
+            />
+        );
+        this.setState({barchart:barchart});
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+      if(JSON.stringify(this.props.l1) !== JSON.stringify(nextProps.l1)) {
+          this.setState({l1: nextProps.l1, l2: nextProps.l2});
+          this._drawChart(nextProps.l1, nextProps.l2);
+      }
+    } 
 
     render() {
         const lineVal = this.state.lineVal;
@@ -54,10 +74,11 @@ export default class Barchart extends Component {
                 height={600}
                 xType="ordinal"
                 yType="linear"
+                yDomain={[0, this.props.ymax]}
                 onMouseLeave={() => this.setState({lineVal:null})}
                 >
                 
-                 <DiscreteColorLegend 
+                <DiscreteColorLegend 
                     items = {[
                       "L1 speakers",
                       "L2 speakers"
@@ -91,7 +112,8 @@ export default class Barchart extends Component {
                     <h5>Number of Speakers = {lineVal.y}</h5>
                   </div>
                 </Hint> : null
-              }                 
+              }
+                               
             </XYPlot>
         </div>);
 
