@@ -21,36 +21,35 @@ import LanguageFamilyData from './data/languageHierarchy.json'
 const MAPBOX_TOKEN = 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg';
 
 class App extends Component {
+
   constructor(props) {
     super(props);
-    this.state= {
+    this.state = {
       l1: null,
       l2: null,
       loadError:false,
       data:null,
       currSer:null,
+      year: 2015,
+      data: null,
+      hoveredFeature: null,
+      viewport: {
+        latitude: 40,
+        longitude: -100,
+        zoom: 3,
+        bearing: 0,
+        pitch: 0,
+        width: 500,
+        height: 500
+      },
+      treePath: []
     };
   }
-
-  state = {
-          year: 2015,
-          data: null,
-          hoveredFeature: null,
-          viewport: {
-          latitude: 40,
-          longitude: -100,
-          zoom: 3,
-          bearing: 0,
-          pitch: 0,
-          width: 500,
-          height: 500
-          }
-      };
-
 
   _onViewportChange = viewport => this.setState({viewport});
 
   componentWillMount() {
+
       csv('test1.csv', (error, d) => {
         if (error) this.setState({loadError: true});
         else {
@@ -92,24 +91,83 @@ class App extends Component {
 		)
 	}
 
+  _handleTreemapHover(node) {
+    this.setState({
+      showTreemapHint: node
+    });
 
-	_renderTreeMap() {
+    node.data.color = 1;
+  }
+
+  _showDirectChildren(node, path) {
+    console.log('this was called')
+    if (!path || path.length === 0) {
+      var tree = Object.assign({}, node)
+      for (var i in tree.children) {
+        delete tree.children[i].children;
+        if (tree.children[i]._size) 
+          tree.children[i].size = tree.children[i]._size;
+      }
+      return tree;
+    }
+
+    for (var i in node.children) {
+      if (node.children[i].title === path[0]) {
+        return this._showDirectChildren(node.children[i], path.splice(1));
+      }
+    }
+
+    return node;
+  }
+
+	_renderTreeMap(tree) {
 		return (
 			<Treemap
 				title={'Language Family Treemap'}
 				width={1000}
 				height={600}
         mode="squarify"
-        padding={5}
-				data={LanguageFamilyData}
-			/>
+        padding={1}
+        onLeafMouseOver={(node, e) => this._handleTreemapHover(node)}
+        onLeafMouseOut={(node, e) => {
+          this.setState({showTreemapHint: null});
+          node.data.color = 0;
+        }}
+        onLeafClick={(node, e) => {
+          var newPath = this.state.treePath;
+          newPath.push(node.data.title);
+          this.setState({
+            treePath: newPath
+          })
+          console.log(this.state.treePath)
+        }}
+        colorDomain={[0,1]}
+				data={tree}
+			>
+        {
+          this.state.showTreemapHint ? 
+            <Hint value={this.state.showTreemapHint}>
+              <div className="hint" style={{
+                background:"white",
+                borderStyle:"solid",
+                borderColor:"grey",
+                borderWidth:"1px",
+                marginBottom:"0px",
+                fontSize:"7",
+                padding:"10px",
+                paddingBottom:"0px",
+                lineHeight:"2px",
+              }}>
+              </div>
+            </Hint> : null
+        }
+      </Treemap>
 		)
 	}
 
   render() {
     var barchart = [];
     if (this.state.l1 && this.state.l2) {
-      console.log(this.state.data);
       barchart.push(
         <VerticalBarSeries
           data={this.state.l1}
@@ -160,6 +218,9 @@ class App extends Component {
        ]
     }
 
+    var treeCopy = Object.assign({}, LanguageFamilyData);
+    console.log(LanguageFamilyData)
+    console.log(treeCopy)
     const lineVal = this.state.lineVal;
 		return (
 		  <div className="App">
@@ -170,9 +231,7 @@ class App extends Component {
 		    </div>
 
 		    <div className="center">
-		    	{ this._renderMap() }
-
-		    	{ this._renderTreeMap() }
+		    	{ this._renderTreeMap(this._showDirectChildren(treeCopy), this.state.treePath) }
 		    </div>
 
         <p></p>
