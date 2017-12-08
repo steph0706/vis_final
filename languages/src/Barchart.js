@@ -70,11 +70,12 @@ export default class Barchart extends Component {
         const lineVal = this.state.lineVal;
         return (<div>
             <XYPlot className="lineChart"
-                width={1000}
-                height={600}
+                width={this.props.width}
+                height={this.props.height}
                 xType="ordinal"
                 yType="linear"
                 yDomain={[0, this.props.ymax]}
+                flex={1}
                 onMouseLeave={() => this.setState({lineVal:null})}
                 >
                 

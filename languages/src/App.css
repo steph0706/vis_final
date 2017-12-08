@@ -51,3 +51,7 @@
 .Bubblechart {
   margin: auto;
 }
+
+.Linechart {
+  display: flex;
+}

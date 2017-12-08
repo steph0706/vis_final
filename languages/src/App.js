@@ -34,6 +34,8 @@ class App extends Component {
       loadError:false,
       data:null,
       bubble:null,
+      width:null,
+      height:null,
     };
     this._toggle = this._toggle.bind(this);
   }
@@ -112,6 +114,8 @@ class App extends Component {
     });
 
     this.setState({bubble:<Bubblechart/>});
+          this.setState({height: this.props.height.slice(0, -2), width: this.props.width.slice(0, -2)});
+
     console.log(this.state.l1);
   }
 
@@ -155,12 +159,14 @@ class App extends Component {
     const lineVal = this.state.lineVal;
 		return (
 		  <div className="App">
+{/*
 		    <h1 className="App-title">Languages of the World</h1>
 		    <div className="App-intro">
 		    	<p>The world is home to approximately 7000 living languages. In an increasingly globalized world, we find that cultural exchange and interaction becomes more commonplace. As such, the need to study foreign languages for both personal and career development rises. This project provides insight to the current linguistic landscape of the world, with the goal of increasing historical intuition and cultural awareness.</p>
 				<p>Language and culture are deeply interconnected concepts which tie in to individual identities. In the end, every individual’s identity is molded by our environment. By being cognizant of cultural diversity, we, as human beings, can further increase mutual understanding, leading to a more harmonious world.</p>
 		    </div>
-
+*/}
+{/*
 		    <div className="center">
 		    	{ this._renderMap() }
 
@@ -168,15 +174,19 @@ class App extends Component {
 		    </div>
 
         <p></p>
+*/}
+        {console.log(this.state.height)}
         {
           (this.state.l1 && this.state.l2) ? 
-          <Barchart l1={this.state.l1} l2={this.state.l2} ymax={this.state.ymax}/> : null
+          <Barchart l1={this.state.l1} l2={this.state.l2} ymax={this.state.ymax} 
+            height={this.state.height} width={this.state.width}  /> : null
 
         }
-
+{/*
 
         {this.state.bubble}
         <Button label1="Top 15 L1" label2="Top 15 L2" handler={this._toggle}/>
+*/}
       </div>
     );
   }

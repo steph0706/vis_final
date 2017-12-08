@@ -1,53 +1,3 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Languages of the World</title>
-  <!-- <meta name="description" content="Scrollama Demo: Sticky JS"> -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="scroll.css">
-
-
-</head>
-
-<body>
-  <section id='intro'>
-    <p class='intro__overline'>
-      <a href='https://github.com/russellgoldenberg/scrollama'>scrollama.js</a>
-    </p>
-    <h1 class='intro__hed'>Languages of the World</h1>
-    <p class='intro__dek'>
-      <p>The world is home to approximately 7000 living languages. In an increasingly globalized world, we find that cultural exchange and interaction becomes more commonplace. As such, the need to study foreign languages for both personal and career development rises. This project provides insight to the current linguistic landscape of the world, with the goal of increasing historical intuition and cultural awareness.</p>
-        <p>Language and culture are deeply interconnected concepts which tie in to individual identities. In the end, every individual’s identity is molded by our environment. By being cognizant of cultural diversity, we, as human beings, can further increase mutual understanding, leading to a more harmonious world.</p>
-    </p>
-  </section>
-  <section id='scroll'>
-    <div class='scroll__graphic sticky' id="root">
-      <p>0</p>
-    </div>
-    <div class='scroll__text'>
-      <div class='step' data-step='1'>
-        <p>STEP 1</p>
-      </div>
-      <div class='step' data-step='2'>
-        <p>STEP 2</p>
-      </div>
-      <div class='step' data-step='3'>
-        <p>STEP 3</p>
-      </div>
-      <div class='step' data-step='4'>
-        <p>STEP 4</p>
-      </div>
-    </div>
-  </section>
-  <section id='outro'></section>
-  <div class='debug'></div>
-  <script src='../d3.v4.min.js'></script>
-  <script src='../stickyfill.min.js'></script>
-  <script src='../scrollama.min.js'></script>
-  <script>
     // using d3 for convenience
     var container = d3.select('#scroll');
     var graphic = container.select('.scroll__graphic');
@@ -118,7 +68,3 @@
     }
     // kick things off
     init();
-  </script>
-</body>
-
-</html>
