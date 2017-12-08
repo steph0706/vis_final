@@ -41,25 +41,51 @@ for language in languages:
 	
 	root.insertPath(famList, name)
 
-data = {}
 # Print Tree
 def treeToJson(node):
-	childrenList = [treeToJson(c) for c in node.children]
+	# childrenList = [treeToJson(c) for c in node.children]
+	childrenList = []
+	size = 0
 
-	if len(childrenList) == 0:
-		obj = {
-			"name": node.name,
-			"size": 1
-		}
-	else :
-		obj = {
-			"name": node.name,
-			"children": childrenList
-		}
-	return obj
-	# print node.name
-	# if len(node.children) > 0:
-	# 	treeToJson(node.children[0])
+	if len(node.children) == 0:
+		return ({
+			"title": node.name,
+			"size": 1,
+			"opacity": 0.5,
+			"color":0
+		}, 1)
+
+	for c in node.children:
+		(childNode, childSize) = treeToJson(c)
+		size += childSize
+		childrenList.append(childNode)
+
+	obj = {
+		"title": node.name,
+		"children": childrenList,
+		"_size": size,
+		"opacity": 0.5,
+		"color":0
+	}
+	return (obj, size)
+
 data = treeToJson(root)
+
+otherLangFam = {
+	"title": "Other",
+	"children": [],
+	"_size": 0,
+	"opacity": 0.5,
+	"color": 0
+}
+
+for c in data[0]['children']:
+	if c['_size'] < 20:
+		otherLangFam['children'].append(c)
+		otherLangFam['_size'] += c['_size']
+		data[0]['children'].remove(c)
+
+data[0]['children'].append(otherLangFam)
+
 print json.dumps(data)
 
