@@ -47,3 +47,7 @@
 .Map {
   text-align: left;
 }
+
+.Sankey {
+  font-color: 'red';
+}

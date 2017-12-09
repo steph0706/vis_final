@@ -6,7 +6,8 @@ import {
   VerticalBarSeries,
   Hint,
   DiscreteColorLegend,
-  Treemap
+  Treemap,
+  Sankey
 } from 'react-vis';
 import './App.css';
 import ReactMapGL, {Popup} from 'react-map-gl';
@@ -31,6 +32,48 @@ class App extends Component {
       loadError:false,
       data:null,
       currSer:null,
+      nodes: [
+            {'name': 'Other Language Families'},
+            {'name': 'Sino-Tibetan'},
+            {'name': 'Indo-European'},
+            {'name': 'Japonic'},
+            {'name': 'Afro-Asiatic'},
+            {'name': 'Mandarin'},
+            {'name': 'Spanish'},
+            {'name': 'English'},
+            {'name': 'Hindi'},
+            {'name': 'Arabic'},
+            {'name': 'Portuguese'},
+            {'name': 'Bengali'},
+            {'name': 'Russian'},
+            {'name': 'Japanese'},
+            {'name': 'Punjabi'},
+            {'name': 'Other Languages'},
+            {'name': 'World Population'}
+          ],
+        links: [
+          {'source': 1, 'target': 5, 'value': 889000000},   // Mandarin
+          {'source': 2, 'target': 6, 'value': 436667750},   // Spanish
+          {'source': 2, 'target': 7, 'value': 371959910},   // English
+          {'source': 2, 'target': 8, 'value': 260129750},   // Hindi
+          {'source': 4, 'target': 9, 'value': 291783650},   // Arabic
+          {'source': 2, 'target': 10, 'value': 218765470},  // Portuguese
+          {'source': 2, 'target': 11, 'value': 242315050},  // Bengali
+          {'source': 2, 'target': 12, 'value': 153612510},  // Russian
+          {'source': 3, 'target': 13, 'value': 128193360},  // Japanese
+          {'source': 2, 'target': 14, 'value': 92721700},   // Punjabi
+          {'source': 0, 'target': 15, 'value': 2493129676}, // Other Languages
+
+          {'source': 16, 'target': 1, 'value': 1355708295},   
+          {'source': 16, 'target': 2, 'value': 3077112005},   
+          {'source': 16, 'target': 3, 'value': 129204210},    
+          {'source': 16, 'target': 4, 'value': 444845814},    
+          {'source': 16, 'target': 0, 'value': 2493129676},
+          
+          {'source': 4, 'target': 15, 'value': 153062164},
+          {'source': 1, 'target': 15, 'value': 466708295},
+          {'source': 2, 'target': 15, 'value': 1393661565},  
+        ]
     };
   }
 
@@ -39,14 +82,15 @@ class App extends Component {
           data: null,
           hoveredFeature: null,
           viewport: {
-          latitude: 40,
-          longitude: -100,
-          zoom: 3,
-          bearing: 0,
-          pitch: 0,
-          width: 500,
-          height: 500
-          }
+            latitude: 40,
+            longitude: -100,
+            zoom: 3,
+            bearing: 0,
+            pitch: 0,
+            width: 500,
+            height: 500
+          },
+          
       };
 
 
@@ -106,60 +150,8 @@ class App extends Component {
 	}
 
   render() {
-    var barchart = [];
-    if (this.state.l1 && this.state.l2) {
-      console.log(this.state.data);
-      barchart.push(
-        <VerticalBarSeries
-          data={this.state.l1}
-          stroke="white"
-          onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
-          onValueMouseOut={() => this.setState({lineVal:null})}
-        />);
-      barchart.push(
-        <VerticalBarSeries
-          data={this.state.l2}
-          stroke="white"
-          style={{float: "left"}}
-          onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
-          onValueMouseOut={() => this.setState({lineVal:null})}
-        />
-      )
-    }
-
-    const myData = {
-       "title": "analytics",
-       "color": "#12939A",
-       "children": [
-        {
-         "title": "cluster",
-         "children": [
-          {"title": "AgglomerativeCluster", "color": "#12939A", "size": 3938},
-          {"title": "CommunityStructure", "color": "#12939A", "size": 3812},
-          {"title": "HierarchicalCluster", "color": "#12939A", "size": 6714},
-          {"title": "MergeEdge", "color": "#12939A", "size": 743}
-         ]
-        },
-        {
-         "title": "graph",
-         "children": [
-          {"title": "BetweennessCentrality", "color": "#12939A", "size": 3534},
-          {"title": "LinkDistance", "color": "#12939A", "size": 5731},
-          {"title": "MaxFlowMinCut", "color": "#12939A", "size": 7840},
-          {"title": "ShortestPaths", "color": "#12939A", "size": 5914},
-          {"title": "SpanningTree", "color": "#12939A", "size": 3416}
-         ]
-        },
-        {
-         "title": "optimization",
-         "children": [
-          {"title": "AspectRatioBanker", "color": "#12939A", "size": 7074}
-         ]
-        }
-       ]
-    }
-
-    const lineVal = this.state.lineVal;
+    var links = this.state.links;
+    var nodes = this.state.nodes;
 		return (
 		  <div className="App">
 		    <h1 className="App-title">Languages of the World</h1>
@@ -168,57 +160,46 @@ class App extends Component {
 				<p>Language and culture are deeply interconnected concepts which tie in to individual identities. In the end, every individual’s identity is molded by our environment. By being cognizant of cultural diversity, we, as human beings, can further increase mutual understanding, leading to a more harmonious world.</p>
 		    </div>
 
-		    <div className="center">
-		    	{ this._renderMap() }
+		    <Sankey
+          className="Sankey"
+          nodes={nodes}
+          links={links.map((d, i) => ({...d,
+              color: this.state.linkIndex === i ? '#ffae19' : null
+          }))}
+          width={800}
+          height={400}
+          onLinkMouseOver={(point, e) => {
+            this.setState({
+              linkIndex: point.index,
+              activeLink: point
+            })
+          }}
+          onLinkMouseOut={(point, e) => {
+            this.setState({
+              linkIndex: null,
+              activeLink: null
+            })
+          }}
+        >
+          {this._renderSankeyHint()}
+        </Sankey>
 
-		    	{ this._renderTreeMap() }
-		    </div>
-
-        <p></p>
-            
-        <XYPlot className="lineChart"
-          width={1000}
-          height={600}
-          xType="ordinal"
-          yType="linear"
-          style={{display:"inline-block"}}
-          >
-          <DiscreteColorLegend 
-            items = {[
-              "L1 speakers",
-              "L2, speakers"
-            ]}
-            width = {100}
-            className="legend"
-            />
-          <HorizontalGridLines />
-          <VerticalGridLines />
-          <YAxis />
-          <XAxis />
-          
-          {barchart}
-          
-          {
-            lineVal ? 
-            <Hint value={lineVal}>
-              <div className="hint" style={{
-                background:"white",
-                borderStyle:"solid",
-                borderColor:"grey",
-                borderWidth:"1px",
-                marginBottom:"0px",
-                fontSize:"7",
-                padding:"10px",
-                paddingBottom:"0px",
-                lineHeight:"2px",
-              }}>
-                <h4>{lineVal.name}</h4>
-                <h5>Number of Speakers = {lineVal.y}</h5>
-              </div>
-            </Hint> : null
-          }                 
-        </XYPlot>
       </div>
+    );
+  }
+
+  _renderSankeyHint() {
+    let activeLink = this.state.activeLink
+    if (activeLink== null) return;
+
+    const x = activeLink.source.x1 + ((activeLink.target.x0 - activeLink.source.x1) / 2);
+    const y = activeLink.y0 - ((activeLink.y0 - activeLink.y1) / 2);
+    const hintValue = {};
+    const label = `${activeLink.source.name} ➞ ${activeLink.target.name}`;
+    hintValue[label] = activeLink.value.toLocaleString();
+
+    return (
+      <Hint x={x} y={y} value={hintValue} />
     );
   }
 }
