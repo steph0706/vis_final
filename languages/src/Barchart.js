@@ -21,9 +21,7 @@ export default class Barchart extends Component {
           ymax: 1300,
           l1:null,
           l2:null,
-
         };
-
         this._drawChart = this._drawChart.bind(this);
     }
 
@@ -39,8 +37,8 @@ export default class Barchart extends Component {
         barchart.push(
             <VerticalBarSeries
               data={data1}
-              stroke="white"
-              animation={true}
+              // stroke="white"
+              animation="wobbly"
               onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
               onValueMouseOut={() => this.setState({lineVal:null})}
             />
@@ -48,7 +46,7 @@ export default class Barchart extends Component {
         barchart.push(
             <VerticalBarSeries
               data={data2}
-              stroke="white"
+              // stroke="white"
               animation={true}
               style={{float: "left"}}
               onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
@@ -70,8 +68,8 @@ export default class Barchart extends Component {
         const lineVal = this.state.lineVal;
         return (<div>
             <XYPlot className="lineChart"
-                width={this.props.width}
-                height={this.props.height}
+                width={Number(this.props.width)}
+                height={Number(this.props.height)}
                 xType="ordinal"
                 yType="linear"
                 yDomain={[0, this.props.ymax]}
@@ -93,7 +91,7 @@ export default class Barchart extends Component {
               <YAxis />
               <XAxis />
               
-              {this.state.barchart}
+              {this.state.barchart ? this.state.barchart : null}
               
               {
                 lineVal ? 

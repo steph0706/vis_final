@@ -11,9 +11,15 @@ export default class Bubblechart extends Component {
     }
 
     createChart() {
-        const div = new ReactFauxDOM.createElement('div');
-        var width = 960,
-        height = 500,
+        if (d3.select('.bubble')[0][0] != null) {
+            console.log(d3.select('.bubble'));
+            return;
+        }
+                    console.log(d3.select('.bubble'));
+
+        const dive = new ReactFauxDOM.Element('div');
+        var width = this.props.width,
+        height = this.props.height,
         padding = 1.5, // separation between same-color nodes
         clusterPadding = 6, // separation between different-color nodes
         maxRadius = 12;
@@ -60,6 +66,7 @@ export default class Bubblechart extends Component {
             .start();
 
         let svg = d3.select("div").append("svg")
+            .attr("class", "bubble")
             .attr("width", width)
             .attr("height", height);
 
@@ -211,7 +218,7 @@ export default class Bubblechart extends Component {
             }
             return false;
         };
-        return div.toReact();
+        return dive.toReact();
     }
 
     render() {

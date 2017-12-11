@@ -51,16 +51,16 @@
     #intro {
       margin-bottom: 320px;
     }
-    #outro {
+    #outro, #outro2 {
       height: 640px;
     }
     /* scrollama */
-    #scroll {
+    #scroll, #scroll2{
       position: relative;
       border-top: 2px dashed #000;
       border-bottom: 2px dashed #000;
     }
-    .scroll__graphic {
+    .scroll__graphic,  .scroll__graphic2{
       position: -webkit-sticky;
       position: sticky;
       float: right;
@@ -70,9 +70,9 @@
       -moz-transform: translate3d(0, 0, 0);
       transform: translate3d(0, 0, 0);
       background-color: #ddd;
-      border: 1px solid #000;
+      /*border: 1px solid #000;*/
     }
-    .scroll__graphic p {
+    .scroll__graphic p, .scroll__graphic2 p {
       text-align: center;
       padding: 1rem;
       position: absolute;
@@ -83,25 +83,25 @@
       transform: translate(-50%, -50%);
       /*font-size: 8rem;*/
       /*font-weight: 900;*/
-      color: #666;
+      /*color: #666;*/
     }
-    .scroll__text {
+    .scroll__text,.scroll__text2 {
       position: relative;
       padding: 0 1rem;
       max-width: 30rem;
       width: 33%;
     }
-    .step {
+    .step,.step2 {
       margin: 0 auto 2rem auto;
       border: 1px solid #333;
     }
-    .step:last-child {
+    .step:last-child, .step2:last-child {
       border-bottom: 1px solid #333;
     }
-    .step.is-active {
+    .step.is-active, .step2.is-active {
       background-color: lightgoldenrodyellow;
     }
-    .step p {
+    .step p, .step2 p {
       text-align: center;
       padding: 1rem;
       font-size: 1.5rem;

@@ -24,9 +24,7 @@
     </p>
   </section>
   <section id='scroll'>
-    <div class='scroll__graphic sticky' id="root">
-      <p>0</p>
-    </div>
+    <div class='scroll__graphic sticky' id="root"></div>
     <div class='scroll__text'>
       <div class='step' data-step='1'>
         <p>STEP 1</p>
@@ -34,20 +32,35 @@
       <div class='step' data-step='2'>
         <p>STEP 2</p>
       </div>
-      <div class='step' data-step='3'>
+<!--       <div class='step' data-step='3'>
         <p>STEP 3</p>
-      </div>
-      <div class='step' data-step='4'>
-        <p>STEP 4</p>
-      </div>
+      </div> -->
     </div>
   </section>
   <section id='outro'></section>
+
+  <section id='scroll2'>
+    <div class='scroll__graphic2 sticky' id="root2"></div>
+    <div class='scroll__text2'>
+      <div class='step2' data-step='4'>
+        <p>STEP 3</p>
+      </div>
+      <div class='step2' data-step='5'>
+        <p>STEP 4</p>
+      </div>
+      <div class='step2' data-step='6'>
+        <p>STEP 5</p>
+      </div>
+    </div>
+  </section>
+  <section id='outro2'></section>
+
   <div class='debug'></div>
   <script src='../d3.v4.min.js'></script>
   <script src='../stickyfill.min.js'></script>
   <script src='../scrollama.min.js'></script>
-  <script>
+  <script id="scrollscript">
+    var currentBox = 0;
     // using d3 for convenience
     var container = d3.select('#scroll');
     var graphic = container.select('.scroll__graphic');
@@ -78,17 +91,21 @@
     function handleStepEnter(response) {
       // response = { element, direction, index }
       // add color to current step only
+      currentBox = response.index;
+      localStorage.setItem("boxId", currentBox);
       step.classed('is-active', function (d, i) {
         return i === response.index;
+
       })
-      // update graphic based on step
-      graphic.select('p').text(response.index + 1);
     }
     function handleContainerEnter(response) {
       // response = { direction }
+
     }
     function handleContainerExit(response) {
       // response = { direction }
+
+      // init();
     }
     function setupStickyfill() {
       d3.selectAll('.sticky').each(function () {
@@ -119,6 +136,90 @@
     // kick things off
     init();
   </script>
+
+  <script id="scrollscript2">
+    var currentBox2 = 0;
+    // using d3 for convenience
+    var container2 = d3.select('#scroll2');
+    var graphic2 = container2.select('.scroll__graphic2');
+    var text2 = container2.select('.scroll__text2');
+    var step2 = text2.selectAll('.step2');
+    // initialize the scrollama
+    var scroller2 = scrollama();
+    // generic window resize listener event
+    function handleResize2() {
+      // 1. update height of step elements
+      var stepHeight2 = Math.floor(window.innerHeight * 0.75);
+      step2.style('height', stepHeight2 + 'px');
+      // 2. update width/height of graphic element
+      var bodyWidth = d3.select('body').node().offsetWidth;
+      var graphicMargin = 16 * 4;
+      var textWidth = text2.node().offsetWidth;
+      var graphicWidth = container2.node().offsetWidth - textWidth - graphicMargin;
+      var graphicHeight = Math.floor(window.innerHeight / 2)
+      var graphicMarginTop = Math.floor(graphicHeight / 2)
+      graphic2
+        .style('width', graphicWidth + 'px')
+        .style('height', graphicHeight + 'px')
+        .style('top', graphicMarginTop + 'px');
+      // 3. tell scrollama to update new element dimensions
+      scroller2.resize();
+    }
+    // scrollama event handlers
+    function handleStepEnter2(response) {
+      // response = { element, direction, index }
+      // add color to current step only
+      currentBox2 = response.index + 2;
+      localStorage.setItem("boxId", currentBox2);
+      console.log(currentBox2);
+      step2.classed('is-active', function (d, i) {
+        return i === response.index;
+
+      })
+    }
+    function handleContainerEnter2(response) {
+      // response = { direction }
+      console.log(response);
+
+    }
+    function handleContainerExit2(response) {
+      // response = { direction }
+      console.log(response);
+      console.log(container2);
+      // init();
+    }
+    function setupStickyfill2() {
+      d3.selectAll('.sticky2').each(function () {
+        Stickyfill.add(this);
+      });
+    }
+    function init2() {
+      localStorage.setItem("boxId", 0);
+      setupStickyfill2();
+      // 1. force a resize on load to ensure proper dimensions are sent to scrollama
+      handleResize2();
+      // 2. setup the scroller passing options
+      // this will also initialize trigger observations
+      // 3. bind scrollama event handlers (this can be chained like below)
+      scroller2.setup({
+        container: '#scroll2',
+        graphic: '.scroll__graphic2',
+        text: '.scroll__text2',
+        step: '.scroll__text2 .step2',
+        debug: true,
+        offset: 0.33,
+      })
+        .onStepEnter(handleStepEnter2)
+        .onContainerEnter(handleContainerEnter2)
+        .onContainerExit(handleContainerExit2);
+      // setup resize event
+      window.addEventListener('resize', handleResize2);
+    }
+    // kick things off
+    init2();
+  </script>
+
+
 </body>
 
 </html>

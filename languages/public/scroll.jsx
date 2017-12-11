@@ -28,6 +28,8 @@
     function handleStepEnter(response) {
       // response = { element, direction, index }
       // add color to current step only
+      console.log("BROOO");
+      if (response.index != 1) d3.select("svg").remove(); 
       step.classed('is-active', function (d, i) {
         return i === response.index;
       })
@@ -35,6 +37,8 @@
       graphic.select('p').text(response.index + 1);
     }
     function handleContainerEnter(response) {
+                    console.log("hihih");
+
       // response = { direction }
     }
     function handleContainerExit(response) {

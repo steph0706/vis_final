@@ -13,6 +13,7 @@ import ReactMapGL, {Popup} from 'react-map-gl';
 import '../node_modules/react-vis/dist/style.css';
 import styles from './App.css';
 import {csv} from 'd3-request';
+import d3 from 'd3';
 import TimelineComponent from './Timeline.js';
 import Barchart from './Barchart';
 import Bubblechart from './Bubblechart';
@@ -33,11 +34,14 @@ class App extends Component {
       ymax: 0,
       loadError:false,
       data:null,
-      bubble:null,
       width:null,
       height:null,
+      box:null,
+      barchart:null,
+      bubble:null,
     };
     this._toggle = this._toggle.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
   }
 
   state = {
@@ -64,7 +68,6 @@ class App extends Component {
       csv(file1, (error, d) => {
         if (error) this.setState({loadError: true});
         else {
-          console.log(d);
           let l1 = [];
           let l2 = [];
           for (var i = 0; i < d.length; i++){
@@ -85,8 +88,6 @@ class App extends Component {
         }
 
       });
-
-
 
       let file2 = "l2l1.csv";
       csv(file2, (error, d) => {
@@ -113,10 +114,31 @@ class App extends Component {
 
     });
 
-    this.setState({bubble:<Bubblechart/>});
-          this.setState({height: this.props.height.slice(0, -2), width: this.props.width.slice(0, -2)});
+    this.setState({height: this.props.height.slice(0, -2), width: this.props.width.slice(0, -2)});
+    this.setState({bubble:<Bubblechart width={this.props.width.slice(0, -2)} height={this.props.height.slice(0,-2)}/>, box:this.props.boxId});
 
-    console.log(this.state.l1);
+
+  }
+
+  componentDidMount() {
+        window.addEventListener("resize", this.updateDimensions);
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.props.boxId !== nextProps.boxId) {
+      if (Number(this.props.boxId) == 0 && Number(nextProps.boxId) == 1 ||
+        Number(this.props.boxId) == 1 && Number(nextProps.boxId) == 0){
+        this._toggle();
+      }
+      this.setState({box: nextProps.boxId});
+    }
+
+  }
+
+  updateDimensions() {
+    let elem = document.getElementById('root').style;
+    this.setState({width: elem.width.slice(0, -2), height: elem.height.slice(0,-2)});
   }
 
   _renderMap() {
@@ -157,15 +179,17 @@ class App extends Component {
 
   render() {
     const lineVal = this.state.lineVal;
-		return (
+    if (Number(this.state.box) == 2) {
+      console.log("hi");
+      return (
+        <div className="App">
+          
+          <Bubblechart width={this.props.width.slice(0, -2)} height={this.props.height.slice(0,-2)}/>
+        </div> 
+        );
+    }
+		else return (
 		  <div className="App">
-{/*
-		    <h1 className="App-title">Languages of the World</h1>
-		    <div className="App-intro">
-		    	<p>The world is home to approximately 7000 living languages. In an increasingly globalized world, we find that cultural exchange and interaction becomes more commonplace. As such, the need to study foreign languages for both personal and career development rises. This project provides insight to the current linguistic landscape of the world, with the goal of increasing historical intuition and cultural awareness.</p>
-				<p>Language and culture are deeply interconnected concepts which tie in to individual identities. In the end, every individual’s identity is molded by our environment. By being cognizant of cultural diversity, we, as human beings, can further increase mutual understanding, leading to a more harmonious world.</p>
-		    </div>
-*/}
 {/*
 		    <div className="center">
 		    	{ this._renderMap() }
@@ -175,18 +199,17 @@ class App extends Component {
 
         <p></p>
 */}
-        {console.log(this.state.height)}
         {
-          (this.state.l1 && this.state.l2) ? 
+          (this.state.l1 && this.state.l2 && (Number(this.state.box) == 0) || Number(this.state.box) == 1) ? 
           <Barchart l1={this.state.l1} l2={this.state.l2} ymax={this.state.ymax} 
             height={this.state.height} width={this.state.width}  /> : null
 
         }
-{/*
+        {/*
+          (this.state.l1 && this.state.l2 && this.state.box == 0) ? 
+          <Button label1="Top 15 L1" label2="Top 15 L2" handler={this._toggle}/> : null
 
-        {this.state.bubble}
-        <Button label1="Top 15 L1" label2="Top 15 L2" handler={this._toggle}/>
-*/}
+        */}
       </div>
     );
   }
