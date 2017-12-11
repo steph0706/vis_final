@@ -1,0 +1,44 @@
+{
+  "nodes" : [
+    {"name": "Other Language Families"},
+    {"name": "Sino-Tibetan"},
+    {"name": "Indo-European"},
+    {"name": "Japonic"},
+    {"name": "Afro-Asiatic"},
+    {"name": "Mandarin"},
+    {"name": "Spanish"},
+    {"name": "English"},
+    {"name": "Hindi"},
+    {"name": "Arabic"},
+    {"name": "Portuguese"},
+    {"name": "Bengali"},
+    {"name": "Russian"},
+    {"name": "Japanese"},
+    {"name": "Punjabi"},
+    {"name": "Other Languages"},
+    {"name": "World Population"}
+  ],
+"links" : [
+  {"source": 1, "target": 5, "value": 889000000},   
+  {"source": 2, "target": 6, "value": 436667750},   
+  {"source": 2, "target": 7, "value": 371959910},   
+  {"source": 2, "target": 8, "value": 260129750},   
+  {"source": 4, "target": 9, "value": 291783650},   
+  {"source": 2, "target": 10, "value": 218765470},  
+  {"source": 2, "target": 11, "value": 242315050},  
+  {"source": 2, "target": 12, "value": 153612510},  
+  {"source": 3, "target": 13, "value": 128193360},  
+  {"source": 2, "target": 14, "value": 92721700},   
+  {"source": 0, "target": 15, "value": 2493129676}, 
+
+  {"source": 16, "target": 1, "value": 1355708295},   
+  {"source": 16, "target": 2, "value": 3077112005},   
+  {"source": 16, "target": 3, "value": 129204210},    
+  {"source": 16, "target": 4, "value": 444845814},    
+  {"source": 16, "target": 0, "value": 2493129676},
+  
+  {"source": 4, "target": 15, "value": 153062164},
+  {"source": 1, "target": 15, "value": 466708295},
+  {"source": 2, "target": 15, "value": 1393661565}  
+]
+}

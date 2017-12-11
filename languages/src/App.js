@@ -14,10 +14,7 @@ import ReactMapGL, {Popup} from 'react-map-gl';
 import '../node_modules/react-vis/dist/style.css';
 import styles from './App.css';
 import {csv} from 'd3-request';
-
-import Data from './speakers.json';
-import LesMisData from './les-mis-data.json';
-
+import SankeyInfo from './SankeyInfo'
 import TimelineComponent from './Timeline.js';
 
 
@@ -32,48 +29,8 @@ class App extends Component {
       loadError:false,
       data:null,
       currSer:null,
-      nodes: [
-            {'name': 'Other Language Families'},
-            {'name': 'Sino-Tibetan'},
-            {'name': 'Indo-European'},
-            {'name': 'Japonic'},
-            {'name': 'Afro-Asiatic'},
-            {'name': 'Mandarin'},
-            {'name': 'Spanish'},
-            {'name': 'English'},
-            {'name': 'Hindi'},
-            {'name': 'Arabic'},
-            {'name': 'Portuguese'},
-            {'name': 'Bengali'},
-            {'name': 'Russian'},
-            {'name': 'Japanese'},
-            {'name': 'Punjabi'},
-            {'name': 'Other Languages'},
-            {'name': 'World Population'}
-          ],
-        links: [
-          {'source': 1, 'target': 5, 'value': 889000000},   // Mandarin
-          {'source': 2, 'target': 6, 'value': 436667750},   // Spanish
-          {'source': 2, 'target': 7, 'value': 371959910},   // English
-          {'source': 2, 'target': 8, 'value': 260129750},   // Hindi
-          {'source': 4, 'target': 9, 'value': 291783650},   // Arabic
-          {'source': 2, 'target': 10, 'value': 218765470},  // Portuguese
-          {'source': 2, 'target': 11, 'value': 242315050},  // Bengali
-          {'source': 2, 'target': 12, 'value': 153612510},  // Russian
-          {'source': 3, 'target': 13, 'value': 128193360},  // Japanese
-          {'source': 2, 'target': 14, 'value': 92721700},   // Punjabi
-          {'source': 0, 'target': 15, 'value': 2493129676}, // Other Languages
-
-          {'source': 16, 'target': 1, 'value': 1355708295},   
-          {'source': 16, 'target': 2, 'value': 3077112005},   
-          {'source': 16, 'target': 3, 'value': 129204210},    
-          {'source': 16, 'target': 4, 'value': 444845814},    
-          {'source': 16, 'target': 0, 'value': 2493129676},
-          
-          {'source': 4, 'target': 15, 'value': 153062164},
-          {'source': 1, 'target': 15, 'value': 466708295},
-          {'source': 2, 'target': 15, 'value': 1393661565},  
-        ]
+      nodes: SankeyInfo.nodes,
+      links: SankeyInfo.links
     };
   }
 
@@ -89,8 +46,7 @@ class App extends Component {
             pitch: 0,
             width: 500,
             height: 500
-          },
-          
+          }
       };
 
 
@@ -123,7 +79,7 @@ class App extends Component {
 
   _renderMap() {
 		return (
-	        <ReactMapGL
+	      <ReactMapGL
 		        className="Map"
 		        width={1000}
 		        height={600}
@@ -133,7 +89,6 @@ class App extends Component {
 		        mapStyle="mapbox://styles/mapbox/dark-v9"
 		        mapboxApiAccessToken={MAPBOX_TOKEN}
 		        onViewportChange={this._onViewportChange}>
-		        
 		    </ReactMapGL>
 		)
 	}
