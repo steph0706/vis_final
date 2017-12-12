@@ -14,9 +14,6 @@
 
 <body>
   <section id='intro'>
-    <p class='intro__overline'>
-      <a href='https://github.com/russellgoldenberg/scrollama'>scrollama.js</a>
-    </p>
     <h1 class='intro__hed'>Languages of the World</h1>
     <p class='intro__dek'>
       <p>The world is home to approximately 7000 living languages. In an increasingly globalized world, we find that cultural exchange and interaction becomes more commonplace. As such, the need to study foreign languages for both personal and career development rises. This project provides insight to the current linguistic landscape of the world, with the goal of increasing historical intuition and cultural awareness.</p>
@@ -32,9 +29,6 @@
       <div class='step' data-step='2'>
         <p>STEP 2</p>
       </div>
-<!--       <div class='step' data-step='3'>
-        <p>STEP 3</p>
-      </div> -->
     </div>
   </section>
   <section id='outro'></section>
@@ -45,17 +39,11 @@
       <div class='step2' data-step='4'>
         <p>STEP 3</p>
       </div>
-      <div class='step2' data-step='5'>
-        <p>STEP 4</p>
-      </div>
-      <div class='step2' data-step='6'>
-        <p>STEP 5</p>
-      </div>
+
     </div>
   </section>
   <section id='outro2'></section>
 
-  <div class='debug'></div>
   <script src='../d3.v4.min.js'></script>
   <script src='../stickyfill.min.js'></script>
   <script src='../scrollama.min.js'></script>
@@ -78,8 +66,8 @@
       var graphicMargin = 16 * 4;
       var textWidth = text.node().offsetWidth;
       var graphicWidth = container.node().offsetWidth - textWidth - graphicMargin;
-      var graphicHeight = Math.floor(window.innerHeight / 2)
-      var graphicMarginTop = Math.floor(graphicHeight / 2)
+      var graphicHeight = Math.floor(window.innerHeight * 0.7)
+      var graphicMarginTop = Math.floor(graphicHeight * 0.15)
       graphic
         .style('width', graphicWidth + 'px')
         .style('height', graphicHeight + 'px')
@@ -123,7 +111,6 @@
         graphic: '.scroll__graphic',
         text: '.scroll__text',
         step: '.scroll__text .step',
-        debug: true,
         offset: 0.33,
       })
         .onStepEnter(handleStepEnter)
@@ -155,8 +142,8 @@
       var graphicMargin = 16 * 4;
       var textWidth = text2.node().offsetWidth;
       var graphicWidth = container2.node().offsetWidth - textWidth - graphicMargin;
-      var graphicHeight = Math.floor(window.innerHeight / 2)
-      var graphicMarginTop = Math.floor(graphicHeight / 2)
+      var graphicHeight = Math.floor(window.innerHeight * 0.7)
+      var graphicMarginTop = Math.floor(graphicHeight * 0.15)
       graphic2
         .style('width', graphicWidth + 'px')
         .style('height', graphicHeight + 'px')
@@ -201,7 +188,6 @@
         graphic: '.scroll__graphic2',
         text: '.scroll__text2',
         step: '.scroll__text2 .step2',
-        debug: true,
         offset: 0.33,
       })
         .onStepEnter(handleStepEnter2)

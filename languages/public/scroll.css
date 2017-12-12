@@ -49,16 +49,14 @@
     }
     /* demo */
     #intro {
-      margin-bottom: 320px;
+      margin-bottom: 100px;
     }
     #outro, #outro2 {
-      height: 640px;
+      height: 200px;
     }
     /* scrollama */
     #scroll, #scroll2{
       position: relative;
-      border-top: 2px dashed #000;
-      border-bottom: 2px dashed #000;
     }
     .scroll__graphic,  .scroll__graphic2{
       position: -webkit-sticky;
@@ -69,21 +67,18 @@
       -webkit-transform: translate3d(0, 0, 0);
       -moz-transform: translate3d(0, 0, 0);
       transform: translate3d(0, 0, 0);
-      background-color: #ddd;
-      /*border: 1px solid #000;*/
     }
     .scroll__graphic p, .scroll__graphic2 p {
       text-align: center;
       padding: 1rem;
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 30%;
+      left: 30%;
+      height: 60%;
       -moz-transform: translate(-50%, -50%);
       -webkit-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
-      /*font-size: 8rem;*/
-      /*font-weight: 900;*/
-      /*color: #666;*/
+
     }
     .scroll__text,.scroll__text2 {
       position: relative;

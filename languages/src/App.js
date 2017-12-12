@@ -16,7 +16,6 @@ import {csv} from 'd3-request';
 import d3 from 'd3';
 import TimelineComponent from './Timeline.js';
 import Barchart from './Barchart';
-import Bubblechart from './Bubblechart';
 import Button from './Button';
 
 
@@ -116,7 +115,6 @@ class App extends Component {
 
     this.setState({height: this.props.height.slice(0, -2), width: this.props.width.slice(0, -2)});
     this.setState({box:this.props.boxId});
-    this.setState({bubble:<Bubblechart width={this.props.width.slice(0, -2)} height={this.props.height.slice(0,-2)}/>, box:this.props.boxId});
 
   }
 

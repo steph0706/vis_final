@@ -38,6 +38,7 @@ export default class Barchart extends Component {
             <VerticalBarSeries
               data={data1}
               // stroke="white"
+              color="#98e2e1"
               animation="wobbly"
               onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
               onValueMouseOut={() => this.setState({lineVal:null})}
@@ -46,6 +47,7 @@ export default class Barchart extends Component {
         barchart.push(
             <VerticalBarSeries
               data={data2}
+              color="#17a5a3"
               // stroke="white"
               animation={true}
               style={{float: "left"}}
@@ -79,8 +81,8 @@ export default class Barchart extends Component {
                 
                 <DiscreteColorLegend 
                     items = {[
-                      "L1 speakers",
-                      "L2 speakers"
+                      {title: "L1 speakers", color: "#98e2e1"},
+                      {title: "L2 speakers", color: "#17a5a3"}
                     ]}
                     width = {100}
                     className="legend"

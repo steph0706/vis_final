@@ -16,9 +16,7 @@ function createBubble() {
     maxRadius = 12;
 
     var color = d3.scale.ordinal()
-          .range(["#338c96", "#338c96"]);
-
-
+          .range(["#98e2e1", "#98e2e1"]);
 
     d3.text("languagesize.csv", function(error, text) {
       if (error) throw error;
@@ -71,7 +69,7 @@ function createBubble() {
 
     node.append("circle")
         .attr("r", function(d){return d.radius})
-        .attr("fill", "#6fc5db")
+        .attr("fill", "#98e2e1")
         .on("mouseenter", handleMouseOver)
         .on("mouseout", handleMouseOut)
         .on("mousedown", handleMouseClick);
@@ -164,7 +162,7 @@ function createBubble() {
 
         // Use D3 to select element, change color and size
         d3.select(this).attr({
-          fill: "#b6e5ea",
+          fill: "#ffa24c",
         });
         console.log(d);
 
@@ -185,7 +183,7 @@ function createBubble() {
     function handleMouseOut(d, i) {
         // Use D3 to select element, change color back to normal
         d3.select(this).attr({
-          fill: "#6fc5db",
+          fill: "#98e2e1",
         });
 
         //Select text by id and then remove
@@ -227,23 +225,13 @@ if (Number(boxid) != 2) {
 
 window.onscroll = function (e) {  
     if (boxid != localStorage.getItem("boxId")) {
-        //remove bubble chart
-        
-        // console.log(boxid);
-        // if (Number(localStorage.getItem("boxId")) != 2) {
-        //     boxid = localStorage.getItem("boxId"); 
-        //     console.log("remov");
-        //     d3.select(".bubble").remove();
-        // }
         console.log("boxid")
         if (Number(localStorage.getItem("boxId") == 2) && !madeBubble) {
             madeBubble = true;
             createBubble();
-        } else if (Number(localStorage.getItem("boxId")) > 1) {
-            boxid = localStorage.getItem("boxId"); 
-            console.log("omg");
-            ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById("root2"));
-        } else {
+        }  else {
+            madeBubble = false;
+            // d3.select(".bubble").remove();
             boxid = localStorage.getItem("boxId");
             ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById("root"));
  
@@ -253,11 +241,9 @@ window.onscroll = function (e) {
 
 function resizeFunc() {
     if (madeBubble) {
-        console.log("hihi")
         d3.select(".bubble").remove();
         createBubble();
     }
-    console.log("resisoaldkjas");
 }
 
 window.addEventListener("resize", resizeFunc);
