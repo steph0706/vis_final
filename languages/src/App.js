@@ -9,7 +9,7 @@ import {
   Treemap
 } from 'react-vis';
 import './App.css';
-import ReactMapGL, {Popup} from 'react-map-gl';
+import ReactMapboxGl, { Layer, Feature, GeoJSONLayer } from "react-mapbox-gl";
 import '../node_modules/react-vis/dist/style.css';
 import styles from './App.css';
 import {csv} from 'd3-request';
@@ -19,8 +19,26 @@ import LesMisData from './les-mis-data.json';
 
 import TimelineComponent from './Timeline.js';
 
+import englishGeoJSON from './englishSpeakingCountries.json';
 
-const MAPBOX_TOKEN = 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg';
+const Map = ReactMapboxGl({
+  accessToken: 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg'
+});
+
+const symbolLayout: MapboxGL.SymbolLayout = {
+  'text-field': '{place}',
+  'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+  'text-offset': [0, 0.6],
+  'text-anchor': 'top'
+};
+const symbolPaint: MapboxGL.SymbolPaint = {
+  'text-color': 'white'
+};
+
+const fillLayout: MapboxGL.FillLayout = { visibility: 'visible' };
+const fillPaint: MapboxGL.FillPaint = {
+  'fill-color': 'red'
+};
 
 class App extends Component {
   constructor(props) {
@@ -49,8 +67,14 @@ class App extends Component {
           }
       };
 
-
-  _onViewportChange = viewport => this.setState({viewport});
+  _onViewportChange(viewport) {
+    console.log(viewport)
+    this.setState({
+      zoom: 8,
+      latitude: viewport.latitude,
+      longitude: viewport.longitude,
+    })
+  }
 
   componentWillMount() {
       csv('test1.csv', (error, d) => {
@@ -79,18 +103,28 @@ class App extends Component {
 
   _renderMap() {
 		return (
-	        <ReactMapGL
-		        className="Map"
-		        width={1000}
-		        height={600}
-		        latitude={0}
-		        longitude={0}
-		        zoom={1}
-		        mapStyle="mapbox://styles/mapbox/dark-v9"
-		        mapboxApiAccessToken={MAPBOX_TOKEN}
-		        onViewportChange={this._onViewportChange}>
-		        
-		    </ReactMapGL>
+	        <Map
+            className="Map"
+            style="mapbox://styles/mapbox/streets-v9"
+            zoom={[0]}
+            center={[0, 0]}
+            containerStyle={{
+              height: "75vh",
+              width: "75vw"
+            }}>
+
+            <GeoJSONLayer
+              data={englishGeoJSON}
+              id="countries"
+              fillLayout={fillLayout}
+              fillPaint={fillPaint}
+              circleOnClick={this.onClickCircle}
+              symbolLayout={symbolLayout}
+              symbolPaint={symbolPaint}
+            >
+
+            </GeoJSONLayer>
+          </Map>
 		)
 	}
 
@@ -106,60 +140,6 @@ class App extends Component {
 	}
 
   render() {
-    var barchart = [];
-    if (this.state.l1 && this.state.l2) {
-      console.log(this.state.data);
-      barchart.push(
-        <VerticalBarSeries
-          data={this.state.l1}
-          stroke="white"
-          onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
-          onValueMouseOut={() => this.setState({lineVal:null})}
-        />);
-      barchart.push(
-        <VerticalBarSeries
-          data={this.state.l2}
-          stroke="white"
-          style={{float: "left"}}
-          onValueMouseOver={(datapoint, {index}) => this.setState({lineVal:datapoint})}
-          onValueMouseOut={() => this.setState({lineVal:null})}
-        />
-      )
-    }
-
-    const myData = {
-       "title": "analytics",
-       "color": "#12939A",
-       "children": [
-        {
-         "title": "cluster",
-         "children": [
-          {"title": "AgglomerativeCluster", "color": "#12939A", "size": 3938},
-          {"title": "CommunityStructure", "color": "#12939A", "size": 3812},
-          {"title": "HierarchicalCluster", "color": "#12939A", "size": 6714},
-          {"title": "MergeEdge", "color": "#12939A", "size": 743}
-         ]
-        },
-        {
-         "title": "graph",
-         "children": [
-          {"title": "BetweennessCentrality", "color": "#12939A", "size": 3534},
-          {"title": "LinkDistance", "color": "#12939A", "size": 5731},
-          {"title": "MaxFlowMinCut", "color": "#12939A", "size": 7840},
-          {"title": "ShortestPaths", "color": "#12939A", "size": 5914},
-          {"title": "SpanningTree", "color": "#12939A", "size": 3416}
-         ]
-        },
-        {
-         "title": "optimization",
-         "children": [
-          {"title": "AspectRatioBanker", "color": "#12939A", "size": 7074}
-         ]
-        }
-       ]
-    }
-
-    const lineVal = this.state.lineVal;
 		return (
 		  <div className="App">
 		    <h1 className="App-title">Languages of the World</h1>
@@ -170,54 +150,7 @@ class App extends Component {
 
 		    <div className="center">
 		    	{ this._renderMap() }
-
-		    	{ this._renderTreeMap() }
 		    </div>
-
-        <p></p>
-            
-        <XYPlot className="lineChart"
-          width={1000}
-          height={600}
-          xType="ordinal"
-          yType="linear"
-          style={{display:"inline-block"}}
-          >
-          <DiscreteColorLegend 
-            items = {[
-              "L1 speakers",
-              "L2, speakers"
-            ]}
-            width = {100}
-            className="legend"
-            />
-          <HorizontalGridLines />
-          <VerticalGridLines />
-          <YAxis />
-          <XAxis />
-          
-          {barchart}
-          
-          {
-            lineVal ? 
-            <Hint value={lineVal}>
-              <div className="hint" style={{
-                background:"white",
-                borderStyle:"solid",
-                borderColor:"grey",
-                borderWidth:"1px",
-                marginBottom:"0px",
-                fontSize:"7",
-                padding:"10px",
-                paddingBottom:"0px",
-                lineHeight:"2px",
-              }}>
-                <h4>{lineVal.name}</h4>
-                <h5>Number of Speakers = {lineVal.y}</h5>
-              </div>
-            </Hint> : null
-          }                 
-        </XYPlot>
       </div>
     );
   }
