@@ -115,10 +115,11 @@ class App extends Component {
     });
 
     this.setState({height: this.props.height.slice(0, -2), width: this.props.width.slice(0, -2)});
+    this.setState({box:this.props.boxId});
     this.setState({bubble:<Bubblechart width={this.props.width.slice(0, -2)} height={this.props.height.slice(0,-2)}/>, box:this.props.boxId});
 
-
   }
+
 
   componentDidMount() {
         window.addEventListener("resize", this.updateDimensions);
@@ -179,16 +180,14 @@ class App extends Component {
 
   render() {
     const lineVal = this.state.lineVal;
-    if (Number(this.state.box) == 2) {
-      console.log("hi");
+    if (Number(this.state.box) >= 2) {
       return (
         <div className="App">
-          
-          <Bubblechart width={this.props.width.slice(0, -2)} height={this.props.height.slice(0,-2)}/>
+          {/*this.state.bubble*/}
         </div> 
         );
-    }
-		else return (
+    } else 
+      return (
 		  <div className="App">
 {/*
 		    <div className="center">

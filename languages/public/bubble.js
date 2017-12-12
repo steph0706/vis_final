@@ -1,24 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
 import d3 from 'd3';
-// import './index.css';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
 
-var madeBubble = false;
+var poop = "poop";
 
-function createBubble() {
-    console.log("fuck");
-    var width = document.getElementById('root2').style.width.slice(0,-2),
-    height = document.getElementById('root2').style.height.slice(0,-2),
+function createChart() {
+    console.log("crating");
+    var width = this.props.width,
+    height = this.props.height,
     padding = 1.5, // separation between same-color nodes
     clusterPadding = 6, // separation between different-color nodes
     maxRadius = 12;
 
     var color = d3.scale.ordinal()
           .range(["#338c96", "#338c96"]);
-
-
 
     d3.text("languagesize.csv", function(error, text) {
       if (error) throw error;
@@ -56,7 +49,7 @@ function createBubble() {
         .on("tick", tick)
         .start();
 
-    let svg = d3.select("#root2").append("svg")
+    let svg = d3.select(".scroll__graphic2").append("svg")
         .attr("class", "bubble")
         .attr("width", width)
         .attr("height", height);
@@ -210,57 +203,6 @@ function createBubble() {
         return false;
     };
 
-
 }
 
 
-let width = document.getElementById('root').style.width;
-let height= document.getElementById('root').style.height;
-
-
-var boxid = localStorage.getItem("boxId");
-var elemName = (boxid > 1 ? "root2" : "root");
-
-if (Number(boxid) != 2) {
-        d3.select(".bubble").remove();
-}
-
-window.onscroll = function (e) {  
-    if (boxid != localStorage.getItem("boxId")) {
-        //remove bubble chart
-        
-        // console.log(boxid);
-        // if (Number(localStorage.getItem("boxId")) != 2) {
-        //     boxid = localStorage.getItem("boxId"); 
-        //     console.log("remov");
-        //     d3.select(".bubble").remove();
-        // }
-        console.log("boxid")
-        if (Number(localStorage.getItem("boxId") == 2) && !madeBubble) {
-            madeBubble = true;
-            createBubble();
-        } else if (Number(localStorage.getItem("boxId")) > 1) {
-            boxid = localStorage.getItem("boxId"); 
-            console.log("omg");
-            ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById("root2"));
-        } else {
-            boxid = localStorage.getItem("boxId");
-            ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById("root"));
- 
-        }
-    }
-}
-
-function resizeFunc() {
-    if (madeBubble) {
-        console.log("hihi")
-        d3.select(".bubble").remove();
-        createBubble();
-    }
-    console.log("resisoaldkjas");
-}
-
-window.addEventListener("resize", resizeFunc);
-
-ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById('root'));
-registerServiceWorker();
