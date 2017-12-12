@@ -229,9 +229,9 @@ window.onscroll = function (e) {
         if (Number(localStorage.getItem("boxId") == 2) && !madeBubble) {
             madeBubble = true;
             createBubble();
-        }  else {
+        } else if (Number(localStorage.getItem("boxId")) != 2){
             madeBubble = false;
-            // d3.select(".bubble").remove();
+            d3.select(".bubble").remove();
             boxid = localStorage.getItem("boxId");
             ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById("root"));
  
