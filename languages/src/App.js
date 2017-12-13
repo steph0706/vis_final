@@ -18,26 +18,12 @@ import TimelineComponent from './Timeline.js';
 import Barchart from './Barchart';
 import Button from './Button';
 
-// import englishGeoJSON from './englishSpeakingCountries.json';
+import englishGeoJSON from './englishSpeakingCountries.json';
+import chineseGeoJSON from './chineseSpeakingCountries.json';
 
 const Map = ReactMapboxGl({
   accessToken: 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg'
 });
-
-const symbolLayout: MapboxGL.SymbolLayout = {
-  'text-field': '{place}',
-  'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-  'text-offset': [0, 0.6],
-  'text-anchor': 'top'
-};
-const symbolPaint: MapboxGL.SymbolPaint = {
-  'text-color': 'white'
-};
-
-const fillLayout: MapboxGL.FillLayout = { visibility: 'visible' };
-const fillPaint: MapboxGL.FillPaint = {
-  'fill-color': 'red'
-};
 
 class App extends Component {
   constructor(props) {
@@ -56,7 +42,10 @@ class App extends Component {
       box:null,
       barchart:null,
       bubble:null,
+      currSer:null,
+      mapLayer: null  // 1: anglosphere, 2: chinese-speaking countries, 3: non-top language speaking countries
     };
+
     this._toggle = this._toggle.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
   }
@@ -86,6 +75,8 @@ class App extends Component {
   }
 
   componentWillMount() {
+    console.log(this.props.mapLayer);
+      this.setState({mapLayer: this.props.mapLayer});
       var file1 = "l1l2.csv";
       var max = 0;
       csv(file1, (error, d) => {
@@ -142,10 +133,9 @@ class App extends Component {
 
   }
 
-
   componentDidMount() {
-        window.addEventListener("resize", this.updateDimensions);
-
+    console.log(this.state.mapLayer);
+    window.addEventListener("resize", this.updateDimensions);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -156,7 +146,6 @@ class App extends Component {
       }
       this.setState({box: nextProps.boxId});
     }
-
   }
 
   updateDimensions() {
@@ -164,32 +153,55 @@ class App extends Component {
     this.setState({width: elem.width.slice(0, -2), height: elem.height.slice(0,-2)});
   }
 
- //  _renderMap() {
-	// 	return (
-	//         <Map
- //            className="Map"
- //            style="mapbox://styles/mapbox/streets-v9"
- //            zoom={[0]}
- //            center={[0, 0]}
- //            containerStyle={{
- //              height: this.state.height,
- //              width: this.state.width
- //            }}>
+  _renderMap() {
+    console.log(String(this.state.height));
+		return (
+          
+	        <Map
+            className="Map"
+            style="mapbox://styles/mapbox/streets-v9"
+            zoom={[0]}
+            center={[0, 0]}
+            containerStyle={{
+              height: String(this.state.height) + "px",
+              width: String(this.state.width) + "px"
+            }}>
 
- //            <GeoJSONLayer
- //              data={englishGeoJSON}
- //              id="countries"
- //              fillLayout={fillLayout}
- //              fillPaint={fillPaint}
- //              circleOnClick={this.onClickCircle}
- //              symbolLayout={symbolLayout}
- //              symbolPaint={symbolPaint}
- //            >
+            <GeoJSONLayer
+              data={englishGeoJSON}
+              id="englishSpeaking"
+              fillLayout={{ visibility: this.state.mapLayer === 1 ? 'visible' : 'none' }}
+              fillPaint={{
+                'fill-color': '#4682B4',
+                'fill-opacity': 0.5,
+                'fill-outline-color': 'blue'
+              }}
+            />
 
- //            </GeoJSONLayer>
- //          </Map>
-	// 	)
-	// }
+            <GeoJSONLayer
+              data={chineseGeoJSON}
+              id="chineseSpeaking"
+              fillLayout={{ visibility: this.state.mapLayer === 2 ? 'visible' : 'none' }}
+              fillPaint={{
+                'fill-color': 'red',
+                'fill-opacity': 0.5,
+                'fill-outline-color': 'red'
+              }}
+            />
+
+            <GeoJSONLayer
+              data={englishGeoJSON}
+              id="nonMajorLanguageSpeaking"
+              fillLayout={{ visibility: this.state.mapLayer === 3 ? 'visible' : 'none' }}
+              fillPaint={{
+                'fill-color': '#FFA500',
+                'fill-opacity': 0.5,
+                'fill-outline-color': 'orange'
+              }}
+            />    
+          </Map>
+		)
+	}
 
 	_renderTreeMap() {
 		return (
@@ -221,11 +233,12 @@ class App extends Component {
 		  
 	    	{ /*(Number(this.state.box) == 0 || (Number(this.state.box) == 1)) ? this._renderMap() : null */}
 
+        { Number(this.state.box) == 0 || Number(this.state.box) == 1 ? this._renderMap() : null }
+
         {
           (this.state.l1 && this.state.l2 && (Number(this.state.box) == 2) || Number(this.state.box) == 3) ? 
           <Barchart l1={this.state.l1} l2={this.state.l2} ymax={this.state.ymax} 
             height={this.state.height} width={this.state.width}  /> : null
-
         }
       </div>
     );

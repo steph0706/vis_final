@@ -225,13 +225,16 @@ createBubble();
 window.onscroll = function (e) {  
     if (boxid != localStorage.getItem("boxId")) {
         console.log("boxid")
-        if (Number(localStorage.getItem("boxId") < 2)) {
+        if (Number(localStorage.getItem('boxId') == 0)) {
             boxid = Number(localStorage.getItem("boxId"));
-            ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById("root"));
+            ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={1}/>, document.getElementById("root"));
+        } else if (Number(localStorage.getItem("boxId") == 1)) {
+            boxid = Number(localStorage.getItem("boxId"));
+            ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={2}/>, document.getElementById("root"));
         } else if (Number(localStorage.getItem("boxId")) < 4){
             boxid = Number(localStorage.getItem("boxId"));
             console.log("hi");
-            ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById("root1"));
+            ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={null}/>, document.getElementById("root1"));
         }
     }
 }
