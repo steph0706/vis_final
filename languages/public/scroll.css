@@ -51,14 +51,14 @@
     #intro {
       margin-bottom: 100px;
     }
-    #outro, #outro2 {
+    #outro, #outro2, #outro1 {
       height: 200px;
     }
     /* scrollama */
-    #scroll, #scroll2{
+    #scroll, #scroll2, #scroll1{
       position: relative;
     }
-    .scroll__graphic,  .scroll__graphic2{
+    .scroll__graphic, .scroll__graphic1,  .scroll__graphic2{
       position: -webkit-sticky;
       position: sticky;
       float: right;
@@ -68,7 +68,18 @@
       -moz-transform: translate3d(0, 0, 0);
       transform: translate3d(0, 0, 0);
     }
-    .scroll__graphic p, .scroll__graphic2 p {
+
+    #bubblechart {
+      float: right;
+      top: 0;
+      right: 2rem;
+      -webkit-transform: translate3d(0, 0, 0);
+      -moz-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+
+
+    }
+    .scroll__graphic p, .scroll__graphic2 p, .scroll__graphic1 p {
       text-align: center;
       padding: 1rem;
       position: absolute;
@@ -80,23 +91,24 @@
       transform: translate(-50%, -50%);
 
     }
-    .scroll__text,.scroll__text2 {
+    .scroll__text,.scroll__text2, .scroll__text1 {
       position: relative;
       padding: 0 1rem;
       max-width: 30rem;
       width: 33%;
     }
-    .step,.step2 {
+    .step, .step2, .step1, .nonscrollstep {
       margin: 0 auto 2rem auto;
       border: 1px solid #333;
     }
-    .step:last-child, .step2:last-child {
+
+    .step:last-child, .step2:last-child, .step1:last-child {
       border-bottom: 1px solid #333;
     }
-    .step.is-active, .step2.is-active {
+    .step.is-active, .step2.is-active, .step1.is-active {
       background-color: lightgoldenrodyellow;
     }
-    .step p, .step2 p {
+    .step p, .step2 p , .step1 p, .nonscrollstep p {
       text-align: center;
       padding: 1rem;
       font-size: 1.5rem;

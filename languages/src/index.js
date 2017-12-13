@@ -8,9 +8,10 @@ import registerServiceWorker from './registerServiceWorker';
 var madeBubble = false;
 
 function createBubble() {
+    madeBubble = true;
     console.log("fuck");
-    var width = document.getElementById('root2').style.width.slice(0,-2),
-    height = document.getElementById('root2').style.height.slice(0,-2),
+    var width = document.getElementById('root1').style.width.slice(0,-2),
+    height = document.getElementById('root1').style.height.slice(0,-2),
     padding = 1.5, // separation between same-color nodes
     clusterPadding = 6, // separation between different-color nodes
     maxRadius = 12;
@@ -54,7 +55,7 @@ function createBubble() {
         .on("tick", tick)
         .start();
 
-    let svg = d3.select("#root2").append("svg")
+    let svg = d3.select("#bubblechart").append("svg")
         .attr("class", "bubble")
         .attr("width", width)
         .attr("height", height);
@@ -215,26 +216,22 @@ function createBubble() {
 let width = document.getElementById('root').style.width;
 let height= document.getElementById('root').style.height;
 
+d3.selectAll(".nonscrollstep")
+    .style('height', Math.floor(window.innerHeight * 0.7) + 'px');
 
-var boxid = localStorage.getItem("boxId");
-var elemName = (boxid > 1 ? "root2" : "root");
+createBubble();
 
-if (Number(boxid) != 2) {
-        d3.select(".bubble").remove();
-}
 
 window.onscroll = function (e) {  
     if (boxid != localStorage.getItem("boxId")) {
         console.log("boxid")
-        if (Number(localStorage.getItem("boxId") == 2) && !madeBubble) {
-            madeBubble = true;
-            createBubble();
-        } else if (Number(localStorage.getItem("boxId")) != 2){
-            madeBubble = false;
-            d3.select(".bubble").remove();
-            boxid = localStorage.getItem("boxId");
+        if (Number(localStorage.getItem("boxId") < 2)) {
+            boxid = Number(localStorage.getItem("boxId"));
             ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById("root"));
- 
+        } else if (Number(localStorage.getItem("boxId")) < 4){
+            boxid = Number(localStorage.getItem("boxId"));
+            console.log("hi");
+            ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById("root1"));
         }
     }
 }
@@ -247,6 +244,6 @@ function resizeFunc() {
 }
 
 window.addEventListener("resize", resizeFunc);
-
+var boxid = localStorage.getItem("boxId");
 ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById('root'));
 registerServiceWorker();

@@ -42,7 +42,8 @@
 }
 
 .legend {
-  margin: auto;
+  margin-top: -90%;
+  margin-left: 80%;
 }
 .Map {
   text-align: left;
