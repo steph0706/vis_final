@@ -4,6 +4,7 @@ import d3 from 'd3';
 // import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import SankeyChart from './Sankey';
 
 var madeBubble = false;
 
@@ -219,22 +220,23 @@ d3.selectAll(".nonscrollstep")
     .style('height', Math.floor(window.innerHeight * 0.7) + 'px');
 
 createBubble();
-
-
+console.log("!!!" + width)
+ReactDOM.render(<SankeyChart width={width.slice(0,-2)} height={height.slice(0,-2)}/>, document.getElementById("sankey"));
+console.log(document.getElementById("sankey"));
 window.onscroll = function (e) {  
     if (boxid != localStorage.getItem("boxId")) {
         console.log("boxid")
         if (Number(localStorage.getItem('boxId') == 0)) {
-            console.log("box");
+            
             boxid = Number(localStorage.getItem("boxId"));
             ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={1}/>, document.getElementById("root"));
         } else if (Number(localStorage.getItem("boxId") == 1)) {
-            console.log("box one");
+            
             boxid = Number(localStorage.getItem("boxId"));
             ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={2}/>, document.getElementById("root"));
         } else if (Number(localStorage.getItem("boxId")) < 4){
             boxid = Number(localStorage.getItem("boxId"));
-            console.log("hi");
+            
             ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={null}/>, document.getElementById("root1"));
         }
     }

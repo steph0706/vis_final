@@ -56,3 +56,7 @@
 .Linechart {
   display: flex;
 }
+
+.Sankey {
+  font-color: 'red';
+}

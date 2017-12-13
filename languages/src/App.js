@@ -14,7 +14,7 @@ import '../node_modules/react-vis/dist/style.css';
 import styles from './App.css';
 import {csv} from 'd3-request';
 import d3 from 'd3';
-import TimelineComponent from './Timeline.js';
+
 import Barchart from './Barchart';
 import Button from './Button';
 
@@ -44,6 +44,7 @@ class App extends Component {
       bubble:null,
       currSer:null,
       mapLayer: null  // 1: anglosphere, 2: chinese-speaking countries, 3: non-top language speaking countries
+      
     };
 
     this._toggle = this._toggle.bind(this);
@@ -55,18 +56,17 @@ class App extends Component {
           data: null,
           hoveredFeature: null,
           viewport: {
-          latitude: 40,
-          longitude: -100,
-          zoom: 3,
-          bearing: 0,
-          pitch: 0,
-          width: 500,
-          height: 500
+            latitude: 40,
+            longitude: -100,
+            zoom: 3,
+            bearing: 0,
+            pitch: 0,
+            width: 500,
+            height: 500
           }
       };
 
   _onViewportChange(viewport) {
-    console.log(viewport)
     this.setState({
       zoom: 8,
       latitude: viewport.latitude,
@@ -75,7 +75,6 @@ class App extends Component {
   }
 
   componentWillMount() {
-    console.log(this.props.mapLayer);
       this.setState({mapLayer: this.props.mapLayer});
       var file1 = "l1l2.csv";
       var max = 0;
@@ -134,7 +133,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log(this.state.mapLayer);
     window.addEventListener("resize", this.updateDimensions);
   }
 
@@ -158,52 +156,50 @@ class App extends Component {
   }
 
   _renderMap() {
-    console.log(String(this.state.height));
 		return (
-          
-	        <Map
-            className="Map"
-            style="mapbox://styles/mapbox/streets-v9"
-            zoom={[0]}
-            center={[0, 0]}
-            containerStyle={{
-              height: String(this.state.height) + "px",
-              width: String(this.state.width) + "px"
-            }}>
+      <Map
+        className="Map"
+        style="mapbox://styles/mapbox/streets-v9"
+        zoom={[0]}
+        center={[0, 0]}
+        containerStyle={{
+          height: String(this.state.height) + "px",
+          width: String(this.state.width) + "px"
+        }}>
 
-            <GeoJSONLayer
-              data={englishGeoJSON}
-              id="englishSpeaking"
-              fillLayout={{ visibility: this.state.mapLayer === 1 ? 'visible' : 'none' }}
-              fillPaint={{
-                'fill-color': '#4682B4',
-                'fill-opacity': 0.5,
-                'fill-outline-color': 'blue'
-              }}
-            />
+        <GeoJSONLayer
+          data={englishGeoJSON}
+          id="englishSpeaking"
+          fillLayout={{ visibility: this.state.mapLayer === 1 ? 'visible' : 'none' }}
+          fillPaint={{
+            'fill-color': '#4682B4',
+            'fill-opacity': 0.5,
+            'fill-outline-color': 'blue'
+          }}
+        />
 
-            <GeoJSONLayer
-              data={chineseGeoJSON}
-              id="chineseSpeaking"
-              fillLayout={{ visibility: this.state.mapLayer === 2 ? 'visible' : 'none' }}
-              fillPaint={{
-                'fill-color': 'red',
-                'fill-opacity': 0.5,
-                'fill-outline-color': 'red'
-              }}
-            />
+        <GeoJSONLayer
+          data={chineseGeoJSON}
+          id="chineseSpeaking"
+          fillLayout={{ visibility: this.state.mapLayer === 2 ? 'visible' : 'none' }}
+          fillPaint={{
+            'fill-color': 'red',
+            'fill-opacity': 0.5,
+            'fill-outline-color': 'red'
+          }}
+        />
 
-            <GeoJSONLayer
-              data={englishGeoJSON}
-              id="nonMajorLanguageSpeaking"
-              fillLayout={{ visibility: this.state.mapLayer === 3 ? 'visible' : 'none' }}
-              fillPaint={{
-                'fill-color': '#FFA500',
-                'fill-opacity': 0.5,
-                'fill-outline-color': 'orange'
-              }}
-            />    
-          </Map>
+        <GeoJSONLayer
+          data={englishGeoJSON}
+          id="nonMajorLanguageSpeaking"
+          fillLayout={{ visibility: this.state.mapLayer === 3 ? 'visible' : 'none' }}
+          fillPaint={{
+            'fill-color': '#FFA500',
+            'fill-opacity': 0.5,
+            'fill-outline-color': 'orange'
+          }}
+        />    
+      </Map>
 		)
 	}
 
@@ -227,6 +223,7 @@ class App extends Component {
   }
 
   render() {
+    
     const lineVal = this.state.lineVal;
     if (Number(this.state.box == 5)) {
       return (<div className="App"></div>);
@@ -244,9 +241,12 @@ class App extends Component {
           <Barchart l1={this.state.l1} l2={this.state.l2} ymax={this.state.ymax} 
             height={this.state.height} width={this.state.width}  /> : null
         }
+
       </div>
     );
   }
+
+  
 }
 
 export default App;
