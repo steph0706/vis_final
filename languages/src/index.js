@@ -9,7 +9,6 @@ var madeBubble = false;
 
 function createBubble() {
     madeBubble = true;
-    console.log("fuck");
     var width = document.getElementById('root1').style.width.slice(0,-2),
     height = document.getElementById('root1').style.height.slice(0,-2),
     padding = 1.5, // separation between same-color nodes
@@ -226,9 +225,11 @@ window.onscroll = function (e) {
     if (boxid != localStorage.getItem("boxId")) {
         console.log("boxid")
         if (Number(localStorage.getItem('boxId') == 0)) {
+            console.log("box");
             boxid = Number(localStorage.getItem("boxId"));
             ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={1}/>, document.getElementById("root"));
         } else if (Number(localStorage.getItem("boxId") == 1)) {
+            console.log("box one");
             boxid = Number(localStorage.getItem("boxId"));
             ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={2}/>, document.getElementById("root"));
         } else if (Number(localStorage.getItem("boxId")) < 4){
@@ -248,5 +249,5 @@ function resizeFunc() {
 
 window.addEventListener("resize", resizeFunc);
 var boxid = localStorage.getItem("boxId");
-ReactDOM.render(<App width={width} height={height} boxId={boxid}/>, document.getElementById('root'));
+ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={1}/>, document.getElementById('root'));
 registerServiceWorker();

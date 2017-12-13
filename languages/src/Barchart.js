@@ -105,6 +105,7 @@ export default class Barchart extends Component {
                 colorDomain={[0, 1, 2]}
                 colorRange={["#98e2e1","#17a5a3", "#ffa24c"]}
                 yDomain={[0, this.props.ymax]}
+                margin={{bottom:70}}
                 flex={1}
                 onMouseLeave={() => {
                   this.setState({lineVal:null});
@@ -124,7 +125,7 @@ export default class Barchart extends Component {
               <HorizontalGridLines />
               <VerticalGridLines />
               <YAxis />
-              <XAxis />
+              <XAxis tickLabelAngle={-70}/>
               
               {this.state.barchart ? this.state.barchart : null}
               

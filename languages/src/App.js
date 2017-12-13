@@ -143,7 +143,11 @@ class App extends Component {
       if (Number(this.props.boxId) == 2 && Number(nextProps.boxId) == 3 ||
         Number(this.props.boxId) == 3 && Number(nextProps.boxId) == 2){
         this._toggle();
-      }
+      } else if (Number(this.props.boxId) == 0 && Number(nextProps.boxId) == 1 ) {
+        this.setState({mapLayer:2});
+      } else if (Number(this.props.boxId) == 1 && Number(nextProps.boxId) == 0) {
+        this.setState({mapLayer:1});
+      } 
       this.setState({box: nextProps.boxId});
     }
   }
