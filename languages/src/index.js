@@ -5,6 +5,7 @@ import d3 from 'd3';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import SankeyChart from './Sankey';
+import TreemapChart from './TreemapChart'
 
 var madeBubble = false;
 
@@ -222,7 +223,9 @@ d3.selectAll(".nonscrollstep")
 createBubble();
 console.log("!!!" + width)
 ReactDOM.render(<SankeyChart width={width.slice(0,-2)} height={height.slice(0,-2)}/>, document.getElementById("sankey"));
-console.log(document.getElementById("sankey"));
+
+ReactDOM.render(<TreemapChart width={width.slice(0,-2)} height={height.slice(0,-2)}/>, document.getElementById("tree"));
+
 window.onscroll = function (e) {  
     if (boxid != localStorage.getItem("boxId")) {
         console.log("boxid")

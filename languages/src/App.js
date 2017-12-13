@@ -203,17 +203,6 @@ class App extends Component {
 		)
 	}
 
-	_renderTreeMap() {
-		return (
-			<Treemap
-				title={'My New Treemap'}
-				width={1000}
-				height={600}
-				
-			/>
-		)
-	}
-
   _toggle() {
     if (this.state.l1 != null && this.state.l12 != null) {
       let temp1 = this.state.l1;
