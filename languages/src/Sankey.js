@@ -15,7 +15,6 @@ export default class SankeyChart extends Component {
       		width: this.props.width,
       		height: this.props.height,
 		}
-		console.log("constructor");
 	}
 
 	componentWillMount() {
@@ -44,7 +43,7 @@ export default class SankeyChart extends Component {
 	            className="Sankey"
 	            nodes={nodes}
 	            links={links.map((d, i) => ({...d,
-	                color: this.state.linkIndex === i ? '#ffae19' : null
+	                color: this.state.linkIndex === i ? '#ffa24c' : "#98e2e1"
 	            }))}
 	            width={this.state.width}
 	            height={this.state.height}

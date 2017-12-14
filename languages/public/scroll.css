@@ -33,6 +33,9 @@
       max-width: 40rem;
       margin: 1rem auto;
       text-align: center;
+      height: 100vh;
+      align-items: center;
+      text-align: center;
     }
     .intro__overline {
       font-size: 1.4rem;
@@ -43,14 +46,49 @@
       text-transform: uppercase;
       font-weight: 900;
       letter-spacing: 0.05em;
+      top: 30%;
+      margin: auto;
+      position: relative;
+
     }
+    .introp {
+      top: 31%;
+      position: relative;
+      text-align: center;
+      margin: auto;
+    }
+
+    #quotePage {
+      height: 100vh;
+      text-align: center;
+    }
+
+    #quote, #author {
+      font-weight: lighter;
+      position: relative;
+      top: 31%;
+      margin: auto;
+    }
+
+    #closer {
+      max-width: 42rem;
+      margin: 1rem auto;
+      height: 100vh;
+      text-align: center;
+      
+    }
+
+    #closer p {
+      position: relative;
+      top: 31%;
+      text-align: center;
+      margin: auto;
+    }
+
     .intro__dek {
       font-size: 1.4rem;
     }
-    /* demo */
-    #intro {
-      margin-bottom: 100px;
-    }
+
     #outro, #outro2, #outro1 {
       height: 200px;
     }
@@ -99,17 +137,13 @@
     }
     .step, .step2, .step1, .nonscrollstep {
       margin: 0 auto 2rem auto;
-      border: 1px solid #333;
     }
 
-    .step:last-child, .step2:last-child, .step1:last-child {
-      border-bottom: 1px solid #333;
-    }
-    .step.is-active, .step2.is-active, .step1.is-active {
-      background-color: lightgoldenrodyellow;
-    }
     .step p, .step2 p , .step1 p, .nonscrollstep p {
-      text-align: center;
+      top: 30%;
+      position: relative;
+      
       padding: 1rem;
-      font-size: 1.5rem;
+      padding-left: 2rem;
+      font-size: 16px;
     }

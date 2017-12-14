@@ -50,8 +50,6 @@ export default class Barchart extends Component {
         barchart.push(
             <VerticalBarSeries
               data={d1}
-              // stroke="white"
-              // color="#98e2e1"
               animation="wobbly"
               onValueMouseOver={(datapoint, {index}) => {
                 this.setState({lineVal:datapoint});

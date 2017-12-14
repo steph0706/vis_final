@@ -141,6 +141,8 @@ class App extends Component {
       if (Number(this.props.boxId) == 2 && Number(nextProps.boxId) == 3 ||
         Number(this.props.boxId) == 3 && Number(nextProps.boxId) == 2){
         this._toggle();
+      } else if (Number(this.props.boxId) == -1 && Number(nextProps.boxId) == 0){
+        this.setState({mapLayer:1});
       } else if (Number(this.props.boxId) == 0 && Number(nextProps.boxId) == 1 ) {
         this.setState({mapLayer:2});
       } else if (Number(this.props.boxId) == 1 && Number(nextProps.boxId) == 0) {
@@ -160,8 +162,8 @@ class App extends Component {
       <Map
         className="Map"
         style="mapbox://styles/mapbox/streets-v9"
-        zoom={[0]}
-        center={[0, 0]}
+        zoom={this.state.mapLayer === 0 ? [0] : [.75]}
+        center={[0, 36]}
         containerStyle={{
           height: String(this.state.height) + "px",
           width: String(this.state.width) + "px"
@@ -220,10 +222,8 @@ class App extends Component {
     else return (
 
 		  <div className="App">
-		  
-	    	{ /*(Number(this.state.box) == 0 || (Number(this.state.box) == 1)) ? this._renderMap() : null */}
 
-        { Number(this.state.box) == 0 || Number(this.state.box) == 1 ? this._renderMap() : null }
+        { Number(this.state.box) < 2 ? this._renderMap() : null }
 
         {
           (this.state.l1 && this.state.l2 && (Number(this.state.box) == 2) || Number(this.state.box) == 3) ? 

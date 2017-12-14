@@ -22,7 +22,7 @@ function createBubble() {
 
     d3.text("languagesize.csv", function(error, text) {
       if (error) throw error;
-      var colNames = "text,size,group\n" + text;
+      var colNames = "text,size,group,num\n" + text;
       var data = d3.csv.parse(colNames);
 
       data.forEach(function(d) {
@@ -73,7 +73,7 @@ function createBubble() {
         .attr("r", function(d){return d.radius})
         .attr("fill", "#98e2e1")
         .on("mouseenter", handleMouseOver)
-        .on("mouseout", handleMouseOut)
+        .on("mouseleave", handleMouseOut)
         .on("mousedown", handleMouseClick);
         
         
@@ -94,6 +94,7 @@ function createBubble() {
             cluster: i,
             radius: data[node_counter].size*1.5,
             text: data[node_counter].text,
+            num: data[node_counter].num,
             x: Math.cos(i / m * 2 * Math.PI) * 200 + width / 2 + Math.random(),
             y: Math.sin(i / m * 2 * Math.PI) * 200 + height / 2 + Math.random()
           };
@@ -166,17 +167,24 @@ function createBubble() {
         d3.select(this).attr({
           fill: "#ffa24c",
         });
-        console.log(d);
 
         // Specify where to put label of text
         svg.append("text").attr({
            id: "t" + i,  // Create an id for text so we can select it later for removing on mouseout
-            x: function() { return (d.x) - 30; },
+            x: function() { return (d.x) + 10; },
             y: function() { return (d.y) - 15; }
         })
         .text(function() {
-          return [d.text];  // Value of the text
+          return [d.num] + " languages with ";  // Value of the text
         })
+        .style("font-size", "13px")
+        .style("fill", "#5c5f66")
+        .append('tspan').attr("dy", 0).attr("dx", "-115")
+        .text(function() {
+            return [d.text] + " speakers";
+        })
+        .attr('dy', '20px')
+        .attr("dx", "-115")
         .style("font-size", "13px")
         .style("fill", "#5c5f66");
 
@@ -221,16 +229,17 @@ d3.selectAll(".nonscrollstep")
     .style('height', Math.floor(window.innerHeight * 0.7) + 'px');
 
 // createBubble();
-console.log("!!!" + width)
 ReactDOM.render(<SankeyChart width={Number(width.slice(0,-2))} height={Number(height.slice(0,-2))}/>, document.getElementById("sankey"));
 
 ReactDOM.render(<TreemapChart width={Number(width.slice(0,-2))} height={Number(height.slice(0,-2))}/>, document.getElementById("tree"));
 
-
+ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={0}/>, document.getElementById("root"));
 window.onscroll = function (e) {
+    console.log(localStorage.getItem("boxId"));
     if (boxid != localStorage.getItem("boxId")) {
         if (Number(localStorage.getItem('boxId') == 0)) {
             boxid = Number(localStorage.getItem("boxId"));
+            console.log('YO')
             ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={1}/>, document.getElementById("root"));
         } else if (Number(localStorage.getItem("boxId") == 1)) {
             boxid = Number(localStorage.getItem("boxId"));
@@ -240,8 +249,10 @@ window.onscroll = function (e) {
             
             ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={null}/>, document.getElementById("root1"));
         }
+
     }
 }
+createBubble();
 
 function resizeFunc() {
     if (madeBubble) {

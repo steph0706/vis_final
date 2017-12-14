@@ -24,27 +24,6 @@ export default class TreemapChart extends Component {
 	    node.data.color = 1;
 	 }
 
-	_showDirectChildren(node, path) {
-	    console.log('this was called')
-	    if (!path || path.length === 0) {
-	      var tree = Object.assign({}, node)
-	      for (var i in tree.children) {
-	        delete tree.children[i].children;
-	        if (tree.children[i]._size) 
-	          tree.children[i].size = tree.children[i]._size;
-	      }
-	      return tree;
-	    }
-
-	    for (var i in node.children) {
-	      if (node.children[i].title === path[0]) {
-	        return this._showDirectChildren(node.children[i], path.splice(1));
-	      }
-	    }
-
-	    return node;
-	}
-
 	render() {
 		return (
 			<Treemap
@@ -56,13 +35,10 @@ export default class TreemapChart extends Component {
 		        hideRootNode={true}
 		        onLeafMouseOver={(node, e) => this._handleTreemapHover(node)}
 		        onLeafMouseOut={(node, e) => {
-		          this.setState({showTreemapHint: null});
 		          node.data.color = 0;
 		        }}
-		        onLeafClick={(node, e) => {
-		          console.log(node)
-		        }}
 		        colorDomain={[0,1]}
+		        colorRange={["#98e2e1", "#ffa24c"]}
 				data={LanguageFamilyData}
 				>
 		    </Treemap>
