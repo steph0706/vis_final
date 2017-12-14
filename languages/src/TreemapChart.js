@@ -45,47 +45,26 @@ export default class TreemapChart extends Component {
 	    return node;
 	}
 
-	render(tree) {
+	render() {
 		return (
 			<Treemap
 				title={'Language Family Treemap'}
-				width={1000}
-				height={600}
+				width={this.props.width}
+				height={this.props.height}
 		        mode="squarify"
-		        padding={1}
+		        padding={2}
+		        hideRootNode={true}
 		        onLeafMouseOver={(node, e) => this._handleTreemapHover(node)}
 		        onLeafMouseOut={(node, e) => {
 		          this.setState({showTreemapHint: null});
 		          node.data.color = 0;
 		        }}
 		        onLeafClick={(node, e) => {
-		          var newPath = this.state.treePath;
-		          newPath.push(node.data.title);
-		          this.setState({
-		            treePath: newPath
-		          })
-		          console.log(this.state.treePath)
+		          console.log(node)
 		        }}
 		        colorDomain={[0,1]}
-						data={tree}
-					>
-		        {
-		          this.state.showTreemapHint ? 
-		            <Hint value={this.state.showTreemapHint}>
-		              <div className="hint" style={{
-		                background:"white",
-		                borderStyle:"solid",
-		                borderColor:"grey",
-		                borderWidth:"1px",
-		                marginBottom:"0px",
-		                fontSize:"7",
-		                padding:"10px",
-		                paddingBottom:"0px",
-		                lineHeight:"2px",
-		              }}>
-		              </div>
-		            </Hint> : null
-		        }
+				data={LanguageFamilyData}
+				>
 		    </Treemap>
 		)
 	}

@@ -220,21 +220,19 @@ let height= document.getElementById('root').style.height;
 d3.selectAll(".nonscrollstep")
     .style('height', Math.floor(window.innerHeight * 0.7) + 'px');
 
-createBubble();
+// createBubble();
 console.log("!!!" + width)
-ReactDOM.render(<SankeyChart width={width.slice(0,-2)} height={height.slice(0,-2)}/>, document.getElementById("sankey"));
+ReactDOM.render(<SankeyChart width={Number(width.slice(0,-2))} height={Number(height.slice(0,-2))}/>, document.getElementById("sankey"));
 
-ReactDOM.render(<TreemapChart width={width.slice(0,-2)} height={height.slice(0,-2)}/>, document.getElementById("tree"));
+ReactDOM.render(<TreemapChart width={Number(width.slice(0,-2))} height={Number(height.slice(0,-2))}/>, document.getElementById("tree"));
 
-window.onscroll = function (e) {  
+
+window.onscroll = function (e) {
     if (boxid != localStorage.getItem("boxId")) {
-        console.log("boxid")
         if (Number(localStorage.getItem('boxId') == 0)) {
-            
             boxid = Number(localStorage.getItem("boxId"));
             ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={1}/>, document.getElementById("root"));
         } else if (Number(localStorage.getItem("boxId") == 1)) {
-            
             boxid = Number(localStorage.getItem("boxId"));
             ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={2}/>, document.getElementById("root"));
         } else if (Number(localStorage.getItem("boxId")) < 4){
