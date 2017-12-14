@@ -33,6 +33,9 @@
       max-width: 40rem;
       margin: 1rem auto;
       text-align: center;
+      height: 100vh;
+      align-items: center;
+      text-align: center;
     }
     .intro__overline {
       font-size: 1.4rem;
@@ -43,14 +46,32 @@
       text-transform: uppercase;
       font-weight: 900;
       letter-spacing: 0.05em;
+      top: 30%;
+      margin: auto;
+      position: relative;
+
     }
+    .introp {
+      top: 31%;
+      position: relative;
+      text-align: center;
+      margin: auto;
+    }
+
+    #quotePage {
+      height: 100vh;
+      text-align: center;
+    }
+
+    #quote, #author {
+      font-weight: lighter;
+
+    }
+
     .intro__dek {
       font-size: 1.4rem;
     }
-    /* demo */
-    #intro {
-      margin-bottom: 100px;
-    }
+
     #outro, #outro2, #outro1 {
       height: 200px;
     }
@@ -99,7 +120,7 @@
     }
     .step, .step2, .step1, .nonscrollstep {
       margin: 0 auto 2rem auto;
-      border: 1px solid #333;
+      /*border: 1px solid #333;*/
     }
 
     .step:last-child, .step2:last-child, .step1:last-child {
@@ -109,7 +130,9 @@
       background-color: lightgoldenrodyellow;
     }
     .step p, .step2 p , .step1 p, .nonscrollstep p {
+      top: 30%;
+      position: relative;
       text-align: center;
       padding: 1rem;
-      font-size: 1.5rem;
+      font-size: 16px;
     }
