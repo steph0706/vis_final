@@ -10,6 +10,7 @@ import {
 import '../node_modules/react-vis/dist/style.css';
 import styles from './App.css';
 import {csv} from 'd3-request';
+import HintContent from './hintcontent.js';
 
 
 export default class Barchart extends Component {
@@ -126,24 +127,11 @@ export default class Barchart extends Component {
               <XAxis tickLabelAngle={-70}/>
               
               {this.state.barchart ? this.state.barchart : null}
-              
               {
                 lineVal ? 
                 <Hint value={lineVal}>
-                  <div className="hint" style={{
-                    background:"white",
-                    borderStyle:"solid",
-                    borderColor:"grey",
-                    borderWidth:"1px",
-                    marginBottom:"0px",
-                    fontSize:"7",
-                    padding:"10px",
-                    paddingBottom:"0px",
-                    lineHeight:"2px",
-                  }}>
-                    <h4>{lineVal.name}</h4>
-                    <h5>Number of Speakers = {lineVal.y}</h5>
-                  </div>
+                  <HintContent value={lineVal} />
+                    
                 </Hint> : null
               }
                                

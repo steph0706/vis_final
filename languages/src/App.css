@@ -56,3 +56,30 @@
 .Sankey {
   font-color: 'red';
 }
+
+.rv-hint {
+  background: black;
+  color: white;
+  font-size: 10px;
+  padding: 10px;
+  border-radius: 3px;
+  width: 110px;
+}
+
+.rv-hint--orientation-topleft {
+  transform: translate(-7px,-7px);
+}
+
+
+.rv-hint--orientation-topright {
+  transform: translate(7px,-7px);
+}
+
+
+.rv-hint--orientation-bottomleft {
+  transform: translate(-7px,7px);
+}
+
+.rv-hint--orientation-bottomright {
+  transform: translate(7px,7px);
+}
