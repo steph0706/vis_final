@@ -129,7 +129,14 @@ export default class Barchart extends Component {
               {this.state.barchart ? this.state.barchart : null}
               {
                 lineVal ? 
-                <Hint value={lineVal}>
+                <Hint value={lineVal} style= {{   
+                      background: "#353535",
+                      color: 'white',
+                      fontSize: "10px",
+                      padding: "10px",
+                      borderRadius: "3px",
+                      width: "110px",
+                       }}>
                   <HintContent value={lineVal} />
                     
                 </Hint> : null

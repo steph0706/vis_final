@@ -235,11 +235,12 @@ ReactDOM.render(<TreemapChart width={Number(width.slice(0,-2))} height={Number(h
 
 ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={0}/>, document.getElementById("root"));
 window.onscroll = function (e) {
-    console.log(localStorage.getItem("boxId"));
+    if (document.getElementById("scrollbubble").getBoundingClientRect().top < 550 && !madeBubble) {
+        createBubble();
+    }
     if (boxid != localStorage.getItem("boxId")) {
         if (Number(localStorage.getItem('boxId') == 0)) {
             boxid = Number(localStorage.getItem("boxId"));
-            console.log('YO')
             ReactDOM.render(<App width={width} height={height} boxId={boxid} mapLayer={1}/>, document.getElementById("root"));
         } else if (Number(localStorage.getItem("boxId") == 1)) {
             boxid = Number(localStorage.getItem("boxId"));
@@ -252,7 +253,7 @@ window.onscroll = function (e) {
 
     }
 }
-createBubble();
+
 
 function resizeFunc() {
     if (madeBubble) {
