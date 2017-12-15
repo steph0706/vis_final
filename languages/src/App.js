@@ -1,33 +1,54 @@
-import React, { Component } from 'react';
+import React, { Component} from 'react';
 import {
   XYPlot, 
   XAxis, YAxis, 
   HorizontalGridLines, VerticalGridLines, 
-  LineMarkSeries,
+  VerticalBarSeries,
   Hint,
+  DiscreteColorLegend,
+  Treemap
 } from 'react-vis';
-import logo from './logo.svg';
 import './App.css';
-import ReactMapGL, {Popup} from 'react-map-gl';
+import ReactMapboxGl, { Layer, Feature, GeoJSONLayer } from "react-mapbox-gl";
 import '../node_modules/react-vis/dist/style.css';
 import styles from './App.css';
 import {csv} from 'd3-request';
+import d3 from 'd3';
 
-import Data from './speakers.json';
-import TimelineComponent from './Timeline.js';
+import Barchart from './Barchart';
+import Button from './Button';
 
-const MAPBOX_TOKEN = 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg';
+import englishGeoJSON from './englishSpeakingCountries.json';
+import chineseGeoJSON from './chineseSpeakingCountries.json';
+
+const Map = ReactMapboxGl({
+  accessToken: 'pk.eyJ1IjoidnRyYW4wMSIsImEiOiJjamFvZXcwbXAwaDNkMzNwZm01eG10MHhkIn0.HMWFx0t9PAyxpG0EV6P6lg'
+});
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state= {
-      lineVal: null,
+      toggled:false,
+      l1: null,
+      l2: null,
+      l12: null,
+      l22: null,
+      ymax: 0,
       loadError:false,
       data:null,
-      series:null,
+      width:null,
+      height:null,
+      box:null,
+      barchart:null,
+      bubble:null,
       currSer:null,
+      mapLayer: null  // 1: anglosphere, 2: chinese-speaking countries, 3: non-top language speaking countries
+      
     };
+
+    this._toggle = this._toggle.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
   }
 
   state = {
@@ -35,131 +56,186 @@ class App extends Component {
           data: null,
           hoveredFeature: null,
           viewport: {
-          latitude: 40,
-          longitude: -100,
-          zoom: 3,
-          bearing: 0,
-          pitch: 0,
-          width: 500,
-          height: 500
+            latitude: 40,
+            longitude: -100,
+            zoom: 3,
+            bearing: 0,
+            pitch: 0,
+            width: 500,
+            height: 500
           }
       };
 
-
-  _onViewportChange = viewport => this.setState({viewport});
+  _onViewportChange(viewport) {
+    this.setState({
+      zoom: 8,
+      latitude: viewport.latitude,
+      longitude: viewport.longitude,
+    })
+  }
 
   componentWillMount() {
-      csv('test.csv', (error, d) => {
+      this.setState({mapLayer: this.props.mapLayer});
+      var file1 = "l1l2.csv";
+      var max = 0;
+      csv(file1, (error, d) => {
         if (error) this.setState({loadError: true});
-        
-          var data = [];
-          var series = [];
+        else {
+          let l1 = [];
+          let l2 = [];
           for (var i = 0; i < d.length; i++){
-            series[i] = d[i][""];
-            var temp = [];
-            var vals = Object.values(d[i]);
-            for (var j = 0; j < vals.length; j++) {
-              temp[j] = {
-                x: j,
-                y: vals[j]
-              };
-            }
-            data[i] = temp;
-            data[i].pop();
+            let vals = Object.values(d[i]);
+            max = Math.max(vals[3], Math.max(max, vals[4]));
+            l1.push( {
+              x: String(vals[1]),
+              y: Number(vals[3]),
+              name: vals[2]
+            });
+            l2.push({
+              x: String(vals[1]),
+              y: Number(vals[4]),
+              name: vals[2]
+            });
           }
-          this.setState({series:series, data:data});
-        
+          this.setState({l1:l1, l2:l2});
+        }
 
       });
+
+      let file2 = "l2l1.csv";
+      csv(file2, (error, d) => {
+      if (error) this.setState({loadError: true});
+      else {
+        let l12 = [];
+        let l22 = [];
+        for (let i = 0; i < d.length; i++){
+          var vals = Object.values(d[i]);
+          max = Math.max(vals[3], Math.max(max, vals[4]));
+          l12.push( {
+            x: String(vals[1]),
+            y: Number(vals[3]),
+            name: vals[2]
+          });
+          l22.push({
+            x: String(vals[1]),
+            y: Number(vals[4]),
+            name: vals[2]
+          });
+        }
+        this.setState({l12: l12, l22: l22, ymax:max});
+      }
+
+    });
+
+    this.setState({height: this.props.height.slice(0, -2), width: this.props.width.slice(0, -2)});
+    this.setState({box:this.props.boxId});
+
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.props.boxId !== nextProps.boxId) {
+      if (Number(this.props.boxId) == 2 && Number(nextProps.boxId) == 3 ||
+        Number(this.props.boxId) == 3 && Number(nextProps.boxId) == 2){
+        this._toggle();
+      } else if (Number(this.props.boxId) == -1 && Number(nextProps.boxId) == 0){
+        this.setState({mapLayer:1});
+      } else if (Number(this.props.boxId) == 0 && Number(nextProps.boxId) == 1 ) {
+        this.setState({mapLayer:2});
+      } else if (Number(this.props.boxId) == 1 && Number(nextProps.boxId) == 0) {
+        this.setState({mapLayer:1});
+      } 
+      this.setState({box: nextProps.boxId});
+    }
+  }
+
+  updateDimensions() {
+    let elem = document.getElementById('root').style;
+    this.setState({width: elem.width.slice(0, -2), height: elem.height.slice(0,-2)});
+  }
+
+  _renderMap() {
+		return (
+      <Map
+        className="Map"
+        style="mapbox://styles/mapbox/streets-v9"
+        zoom={this.state.mapLayer === 0 ? [0] : [.75]}
+        center={[0, 36]}
+        containerStyle={{
+          height: String(this.state.height) + "px",
+          width: String(this.state.width) + "px"
+        }}>
+
+        <GeoJSONLayer
+          data={englishGeoJSON}
+          id="englishSpeaking"
+          fillLayout={{ visibility: this.state.mapLayer === 1 ? 'visible' : 'none' }}
+          fillPaint={{
+            'fill-color': '#4682B4',
+            'fill-opacity': 0.5,
+            'fill-outline-color': 'blue'
+          }}
+        />
+
+        <GeoJSONLayer
+          data={chineseGeoJSON}
+          id="chineseSpeaking"
+          fillLayout={{ visibility: this.state.mapLayer === 2 ? 'visible' : 'none' }}
+          fillPaint={{
+            'fill-color': 'red',
+            'fill-opacity': 0.5,
+            'fill-outline-color': 'red'
+          }}
+        />
+
+        <GeoJSONLayer
+          data={englishGeoJSON}
+          id="nonMajorLanguageSpeaking"
+          fillLayout={{ visibility: this.state.mapLayer === 3 ? 'visible' : 'none' }}
+          fillPaint={{
+            'fill-color': '#FFA500',
+            'fill-opacity': 0.5,
+            'fill-outline-color': 'orange'
+          }}
+        />    
+      </Map>
+		)
+	}
+
+  _toggle() {
+    if (this.state.l1 != null && this.state.l12 != null) {
+      let temp1 = this.state.l1;
+      let temp2 = this.state.l2;
+      this.setState({l1: this.state.l12, l2: this.state.l22, l12:temp1, l22: temp2});
+    }
   }
 
   render() {
-    var lines = [];
-    if (this.state.series) {
-      for (var i = 0; i < this.state.series.length; i++) {
-        var lang = this.state.series[i];
-        var d = this.state.data[i];
-        lines.push(<LineMarkSeries
-                    data={d}
-                    className={lang}
-                    onValueMouseOver= {(datapoint, event) => this.setState({lineVal:datapoint, currSer:lang})}
-                    
-                    onValueMouseOut= {(datapoint, event) => this.setState({lineVal:null, currSer:null})}
-                    size={3}
-                  />);
-      }
-    }
+    
     const lineVal = this.state.lineVal;
-		return (
+    if (Number(this.state.box == 5)) {
+      return (<div className="App"></div>);
+    }
+    else return (
+
 		  <div className="App">
-		    <h1 className="App-title">Languages of the World</h1>
-		    <p className="App-intro">
-		      Language is a system that consists of the development, acquisition, maintenance and use of complex systems of communication, particularly the human ability to do so; and a language is any specific example of such a system.
-		The scientific study of language is called linguistics. Questions concerning the philosophy of language, such as whether words can represent experience, have been debated since Gorgias and Plato in ancient Greece. Thinkers such as Rousseau have argued that language originated from emotions while others like Kant have held that it originated from rational and logical thought. 20th-century philosophers such as Wittgenstein argued that philosophy is really the study of language. Major figures in linguistics include Ferdinand de Saussure and Noam Chomsky.
-		    </p>
-		    <div className="center">
-		        <ReactMapGL
-			        className="Map"
-			        width={1000}
-			        height={600}
-			        latitude={0}
-			        longitude={0}
-			        zoom={1}
-			        mapStyle="mapbox://styles/mapbox/dark-v9"
-			        mapboxApiAccessToken={MAPBOX_TOKEN}
-			        onViewportChange={this._onViewportChange}
-			        
-			        >
-			      </ReactMapGL>
-		    </div>
 
-        <p></p>
-        <div>
-            <XYPlot id="lineChart"
-              yDomain={[100, 1500]}
-              width={800}
-              height={600}
-              >
+        { Number(this.state.box) < 2 ? this._renderMap() : null }
 
-              <HorizontalGridLines />
-              <VerticalGridLines />
-              {lines}
-                            <YAxis />
-              <XAxis />
-              {
-                lineVal ? 
-                <Hint value={lineVal}>
-                  <div className="hint" style={{
-                    background:"white",
-                    borderStyle:"solid",
-                    borderColor:"grey",
-                    borderWidth:"1px",
-                    marginBottom:"0px",
-                    fontSize:"7",
-                    padding:"10px",
-                    paddingBottom:"0px",
-                    lineHeight:"2px",
-                  }}>
-                    {this.state.currSer}
-                    <h5>Number of Speakers = {lineVal.y}</h5>
-                  </div>
-                </Hint> : null
-              }                 
-            </XYPlot>
-        </div>
+        {
+          (this.state.l1 && this.state.l2 && (Number(this.state.box) == 2) || Number(this.state.box) == 3) ? 
+          <Barchart l1={this.state.l1} l2={this.state.l2} ymax={this.state.ymax} 
+            height={this.state.height} width={this.state.width}  /> : null
+        }
 
-
-        <TimelineComponent
-          	language="Chinese"
-          	description="The Chinese language is cool. There are many variants."
-          	events={[
-          		{"date": "800 BC", "text": "Chinese was born"},
-          		{"date": "0 AD", "text": "Jesus was born"}
-          	]}
-      	/>
       </div>
     );
   }
+
+  
 }
 
 export default App;
