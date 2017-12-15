@@ -18,14 +18,24 @@ export default class TreemapChart extends Component {
 	}
 	_handleTreemapHover(node) {
 	    this.setState({
-	      showTreemapHint: node
+	      hovered: node
 	    });
+	    console.log(node)
 
 	    node.data.color = 1;
 	 }
 
+	_showLanguage() {
+		if (this.state.hovered) {
+			return this.state.hovered.data.title + ": " + this.state.hovered.data.size + " languages";
+		}
+
+		return "";
+	}
+
 	render() {
 		return (
+			<div>
 			<Treemap
 				title={'Language Family Treemap'}
 				width={this.props.width}
@@ -35,6 +45,7 @@ export default class TreemapChart extends Component {
 		        hideRootNode={true}
 		        onLeafMouseOver={(node, e) => this._handleTreemapHover(node)}
 		        onLeafMouseOut={(node, e) => {
+		          this.setState({hovered: null});
 		          node.data.color = 0;
 		        }}
 		        colorDomain={[0,1]}
@@ -42,6 +53,8 @@ export default class TreemapChart extends Component {
 				data={LanguageFamilyData}
 				>
 		    </Treemap>
+		    <h3>{ this._showLanguage() }</h3>
+		    </div>
 		)
 	}
 }
