@@ -6,6 +6,8 @@ We split the actual coding: Vincent did treemap, sankey, map stuff and Steph did
 
 Title: Exploring Language Diversity
 
+Demo: https://www.youtube.com/watch?v=GFDYmEVmCGE&feature=youtu.be
+
 To run, cd into /languages directory, npm install, then npm start.
 
 Citations:
